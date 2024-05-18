@@ -5,8 +5,6 @@ import { useRecoilState } from "recoil";
 import { addressState } from "@/atom/addressState";
 import { useRouter } from "expo-router";
 import React from "react";
-import { useAuth0 } from "react-native-auth0";
-import axios from "axios";
 
 /**
  * @description 주소 검색 페이지
@@ -14,33 +12,9 @@ import axios from "axios";
 const SearchAddress = () => {
   // state
   const [address, setAddress] = useRecoilState(addressState);
-  const { user, authorize, getCredentials } = useAuth0();
 
   // hooks
   const router = useRouter();
-
-  if (!user) {
-    const login = async () => {
-      try {
-        await authorize({
-          scope: "openid profile email",
-          audience: "http://localhost:8080",
-        });
-        const credentials = await getCredentials();
-
-        await axios.post("http://localhost:8080/api/v1/login", user, {
-          headers: {
-            Authorization: `Bearer ${credentials?.accessToken}`,
-          },
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    login();
-    return;
-  }
 
   const toNextPage = () => {
     if (!address.zonecode || !address.address) {
@@ -120,7 +94,7 @@ export default SearchAddress;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 50,
+
     margin: 15,
   },
   title: {

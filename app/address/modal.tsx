@@ -15,7 +15,7 @@ export default function ModalScreen() {
 
   const onSelected = (response: OnCompleteParams) => {
     setAddress({ ...response, detailAddress: "" });
-    router.navigate("/post/(register)/address");
+    router.navigate("/post/address");
   };
 
   return (

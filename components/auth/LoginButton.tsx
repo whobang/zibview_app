@@ -17,8 +17,11 @@ const Login = () => {
       });
       const credentials = await getCredentials();
 
-      await axios.post("http://localhost:8080/api/v1/login", user, {
+      if (error) return;
+
+      await axios.post("http://localhost:8080/api/login", user, {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${credentials?.accessToken}`,
         },
       });

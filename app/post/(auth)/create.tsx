@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
-
 import TextInput from "@/components/common/TextInput";
 import React from "react";
 import BuildingSelector, {
@@ -11,7 +10,7 @@ import { AddressState, addressState } from "@/atom/addressState";
 import { useRecoilValue } from "recoil";
 import Residency from "@/components/post/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { AxiosResponse } from "axios";
+import axios from "axios";
 
 type Post = {
   buildingType: BuildingType;
@@ -38,7 +37,6 @@ const Create = () => {
   const address = useRecoilValue(addressState);
   const axiosPrivate = useAxiosPrivate();
 
-  useEffect;
   useEffect(() => {
     setPost((prev) => {
       return { ...prev, address };
@@ -87,8 +85,8 @@ const Create = () => {
   const registerPost = async () => {
     // TODO: Validation
 
-    await axiosPrivate
-      .post("/api/v1/posts", post)
+    await axios
+      .post("/api/posts", post)
       .then((res) => console.log("response: ", res))
       .catch((e) => {
         console.log("error: ", e);
