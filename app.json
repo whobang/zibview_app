@@ -15,16 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.app.zibview",
-      "supportsTablet": true,
-      "infoPlist": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.314851364329-1rjalmmej07i6klivvagqa430gei7m1l"
-            ]
-          }
-        ]
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -39,15 +30,15 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "react-native-auth0",
+        {
+          "domain": "dev-yqvrvh36brvqbhfs.jp.auth0.com"
+        }
+      ],
       "expo-router",
       "expo-secure-store",
-      "expo-font",
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.314851364329-1rjalmmej07i6klivvagqa430gei7m1l"
-        }
-      ]
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

@@ -2,15 +2,14 @@ import { useStorageState } from "@/hooks/useStorageState";
 import React, { createContext, useEffect, useState } from "react";
 
 export interface User {
-  email: string;
-  name: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  pictureUrl: string | null;
+  email: string | null;
+  name: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  pictureUrl: string | undefined;
   accessToken: string;
-  refreshToken: string;
+  refreshToken: string | undefined;
   expiresIn: number;
-  needOnboarding: boolean;
 }
 
 export interface Auth {

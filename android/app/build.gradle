@@ -85,6 +85,9 @@ android {
 
     namespace 'com.app.zibview'
     defaultConfig {
+// @generated begin react-native-auth0-manifest-placeholder - expo prebuild (DO NOT MODIFY) sync-ef06fe66f3e0b57892420f357d1fa63b39db2ca0
+manifestPlaceholders = [auth0Domain: "dev-yqvrvh36brvqbhfs.jp.auth0.com", auth0Scheme: "com.app.zibview.auth0"]
+// @generated end react-native-auth0-manifest-placeholder
         applicationId 'com.app.zibview'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

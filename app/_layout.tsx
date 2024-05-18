@@ -14,7 +14,7 @@ import {
 } from "@react-navigation/native";
 
 import { useColorScheme } from "@/components/useColorScheme";
-import { View } from "react-native";
+import { Auth0Provider } from "react-native-auth0";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -53,19 +53,26 @@ export default function RootLayout() {
   }
 
   return (
-    <RecoilRoot>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <AuthProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-            <Stack.Screen
-              name="address/modal"
-              options={{ presentation: "modal" }}
-            />
-          </Stack>
-        </AuthProvider>
-      </ThemeProvider>
-    </RecoilRoot>
+    <Auth0Provider
+      domain={process.env.EXPO_PUBLIC_AUTH0_DOMAIN!}
+      clientId={process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID!}
+    >
+      <RecoilRoot>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <AuthProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+              <Stack.Screen
+                name="address/modal"
+                options={{ presentation: "modal" }}
+              />
+            </Stack>
+          </AuthProvider>
+        </ThemeProvider>
+      </RecoilRoot>
+    </Auth0Provider>
   );
 }
