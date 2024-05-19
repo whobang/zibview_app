@@ -40,7 +40,11 @@ const Login = () => {
       })
       .then((res) => {
         console.log("log in success");
-        setAuth({ accessToken: credentials!.accessToken });
+        setAuth({
+          accessToken: credentials!.accessToken,
+          email: user?.email,
+          name: user?.name,
+        });
       })
       .catch((e) => {
         console.log("error: ", e);

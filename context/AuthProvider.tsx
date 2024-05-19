@@ -3,6 +3,8 @@ import React, { createContext, useEffect, useState } from "react";
 
 export interface User {
   accessToken: string;
+  email: string | undefined;
+  name: string | undefined;
 }
 
 export interface Auth {

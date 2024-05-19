@@ -1,25 +1,59 @@
+import React, { useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import PagerView from "react-native-pager-view";
 import { AntDesign } from "@expo/vector-icons";
 import IconWithCount from "@/components/common/IconWithCount";
 import TextInput from "@/components/common/TextInput";
 import useAuth from "@/hooks/useAuth";
 import { User } from "@/context/AuthProvider";
+import Map from "@/components/post/Map";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { AxiosResponse } from "axios";
+
+interface IPost {
+  latitude: string;
+  longitude: string;
+}
 
 const Post = () => {
+  // hooks
+  const axiosPrivate = useAxiosPrivate();
   const { postId } = useLocalSearchParams();
   const { auth } = useAuth();
+  console.log("postId", postId);
+
+  // fetch data
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axiosPrivate.get<string, AxiosResponse<IPost>>(
+          `/api/posts/${postId}`
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPost();
+  }, [postId]);
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <ImageSwiper />
+      <ScrollView nestedScrollEnabled>
+        <Map />
+        {/* <ImageSwiper /> */}
         <BuildingInfo />
-        {/* <DateBadge /> */}
         <Content />
-        <Comment />
+        {/* <Comment /> */}
         <Content />
         <EmptyComment auth={auth} />
         <Content />
@@ -108,7 +142,7 @@ const Content = () => {
             uri: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
           }}
         />
-        <View style={{ justifyContent: "space-evenly" }}>
+        <View style={{ flex: 1, justifyContent: "space-evenly" }}>
           <View
             style={{
               flexDirection: "row",
@@ -118,12 +152,46 @@ const Content = () => {
             <Text style={{ fontSize: 15, fontWeight: "bold" }}>sarakim</Text>
             <AntDesign name="checkcircleo" size={18} />
           </View>
-          <View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
             <Text>거주 기간: 1년</Text>
+            <Text style={{ marginBottom: 3, color: "#6b7280" }}>
+              2024년 1월 23일
+            </Text>
           </View>
         </View>
       </View>
-      <Text style={{ marginBottom: 3, color: "#6b7280" }}>2024년 1월 23일</Text>
+      <FlatList
+        style={{ marginVertical: 10 }}
+        horizontal
+        data={[
+          {
+            id: 1,
+            url: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
+          },
+          {
+            id: 2,
+            url: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
+          },
+          {
+            id: 3,
+            url: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
+          },
+        ]}
+        renderItem={({ item }) => (
+          <Image
+            style={{
+              height: 100,
+              width: 100,
+              borderRadius: 3,
+              marginRight: 5,
+            }}
+            source={{ uri: item.url }}
+          />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+      />
       <Text style={{ fontWeight: "bold", fontSize: 22, marginBottom: 12 }}>
         오늘 첫 입주했습니다.
       </Text>
@@ -131,6 +199,7 @@ const Content = () => {
         3개월간 머물 예정이며, 더 많은 정보를 원하시면 문의주세요. 집 주인은
         친절하고, 깨끗한 집입니다. 부동산은 어디어디 부동산입니다.
       </Text>
+      <Comment />
     </View>
   );
 };
@@ -139,7 +208,7 @@ const Comment = () => {
   return (
     <View
       style={{
-        margin: 15,
+        marginTop: 15,
         justifyContent: "center",
         paddingBottom: 25,
         borderBottomWidth: 1,
