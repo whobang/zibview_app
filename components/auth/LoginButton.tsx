@@ -1,13 +1,21 @@
+import useAuth from "@/hooks/useAuth";
 import axios from "axios";
-import React from "react";
-import { Alert, Button, Pressable, StyleSheet, Text, View } from "react-native";
-import { useAuth0, Auth0Provider } from "react-native-auth0";
+import React, { useEffect } from "react";
+import { Pressable, Text } from "react-native";
+import { useAuth0 } from "react-native-auth0";
 
 const Login = () => {
+  const { setAuth } = useAuth();
   const { authorize, clearSession, user, error, getCredentials, isLoading } =
     useAuth0();
 
-  console.log("user", user);
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    login();
+  }, [user]);
 
   const onLogin = async () => {
     try {
@@ -15,19 +23,28 @@ const Login = () => {
         scope: "openid profile email",
         audience: "http://localhost:8080",
       });
-      const credentials = await getCredentials();
-
-      if (error) return;
-
-      await axios.post("http://localhost:8080/api/login", user, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${credentials?.accessToken}`,
-        },
-      });
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const login = async () => {
+    const credentials = await getCredentials();
+
+    await axios
+      .post("http://localhost:8080/api/login", JSON.stringify(user), {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${credentials!.accessToken}`,
+        },
+      })
+      .then((res) => {
+        console.log("log in success");
+        setAuth({ accessToken: credentials!.accessToken });
+      })
+      .catch((e) => {
+        console.log("error: ", e);
+      });
   };
 
   const loggedIn = user !== undefined && user !== null;

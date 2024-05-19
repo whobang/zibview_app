@@ -26,7 +26,7 @@ const ImageSelector = ({ onImageChange }: Props) => {
   // state
   const [images, setImages] = useState<ImageType[]>([]);
 
-  // // hooks
+  // hooks
   const axiosPrivate = useAxiosPrivate();
 
   // 이미지 추가
@@ -93,7 +93,7 @@ const ImageSelector = ({ onImageChange }: Props) => {
   // 이미지 업로드
   const uploadImage = async (formData: FormData) => {
     axiosPrivate
-      .post("/api/v1/images", formData, {
+      .post("/api/images", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

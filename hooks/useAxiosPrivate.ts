@@ -10,12 +10,10 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 }
 
 const useAxiosPrivate = () => {
-  const refresh = useRefreshtoken();
+  // const refresh = useRefreshtoken();
   const { auth } = useAuth();
 
   useEffect(() => {
-    console.log("Setting up interceptors...");
-
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
@@ -62,18 +60,18 @@ const useAxiosPrivate = () => {
         //   alert("알 수 없는 에러입니다.");
         // }
 
-        const prevRequest = error?.config as CustomAxiosRequestConfig;
-        if (error?.response?.status === 403 && !prevRequest?.sent) {
-          prevRequest.sent = true;
-          const newAccessToken = await refresh();
-          if (prevRequest) {
-            prevRequest.headers = {
-              ...prevRequest.headers,
-              Authorization: `Bearer ${newAccessToken}`,
-            };
-          }
-          return axiosPrivate(prevRequest);
-        }
+        // const prevRequest = error?.config as CustomAxiosRequestConfig;
+        // if (error?.response?.status === 403 && !prevRequest?.sent) {
+        //   prevRequest.sent = true;
+        //   const newAccessToken = await refresh();
+        //   if (prevRequest) {
+        //     prevRequest.headers = {
+        //       ...prevRequest.headers,
+        //       Authorization: `Bearer ${newAccessToken}`,
+        //     };
+        //   }
+        //   return axiosPrivate(prevRequest);
+        // }
         return Promise.reject(error);
       }
     );
@@ -82,7 +80,7 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestIntercept);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
-  }, [auth, refresh]);
+  }, [auth]);
 
   return axiosPrivate;
 };

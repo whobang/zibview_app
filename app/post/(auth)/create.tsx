@@ -5,12 +5,13 @@ import TextInput from "@/components/common/TextInput";
 import React from "react";
 import BuildingSelector, {
   BuildingType,
-} from "../../../components/post/BuildingSelector";
+} from "@/components/post/BuildingSelector";
 import { AddressState, addressState } from "@/atom/addressState";
 import { useRecoilValue } from "recoil";
 import Residency from "@/components/post/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { useRouter } from "expo-router";
 
 type Post = {
   buildingType: BuildingType;
@@ -21,6 +22,10 @@ type Post = {
   residencyStartDate: Date;
   residencyEndDate: Date;
 };
+
+interface IPost {
+  postId: number;
+}
 
 /**
  * @description 게시글 작성 페이지
@@ -34,6 +39,7 @@ const Create = () => {
   } as Post);
 
   // hooks
+  const router = useRouter();
   const address = useRecoilValue(addressState);
   const axiosPrivate = useAxiosPrivate();
 
@@ -85,9 +91,11 @@ const Create = () => {
   const registerPost = async () => {
     // TODO: Validation
 
-    await axios
-      .post("/api/posts", post)
-      .then((res) => console.log("response: ", res))
+    await axiosPrivate
+      .post<Post, AxiosResponse<IPost>>("/api/posts", post)
+      .then(({ data }) => {
+        router.replace(`/post/${data.postId}`);
+      })
       .catch((e) => {
         console.log("error: ", e);
       });
