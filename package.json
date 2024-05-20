@@ -55,7 +55,8 @@
     "react-native-webview": "13.8.6",
     "recoil": "^0.7.7",
     "zod": "^3.23.8",
-    "react-native-maps": "1.14.0"
+    "react-native-maps": "1.14.0",
+    "expo-location": "~17.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

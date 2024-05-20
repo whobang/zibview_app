@@ -1,11 +1,12 @@
 import useAuth from "@/hooks/useAuth";
-import axios from "axios";
+import useAxios from "@/hooks/useAxios";
 import React, { useEffect } from "react";
 import { Pressable, Text } from "react-native";
 import { useAuth0 } from "react-native-auth0";
 
 const Login = () => {
   const { setAuth } = useAuth();
+  const axios = useAxios();
   const { authorize, clearSession, user, error, getCredentials, isLoading } =
     useAuth0();
 
