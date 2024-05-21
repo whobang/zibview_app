@@ -29,8 +29,12 @@ const Post = ({ post }: Props) => {
           <Text style={styles.address}>{post.address}</Text>
           <Text style={styles.buildingName}>{post.buildingName}</Text>
           <View style={styles.row}>
-            <Text style={styles.rowItem}>현재 상태: 평온</Text>
-            <Text style={styles.rowItem}>월세</Text>
+            <Text style={styles.rowItem}>월세: 50만원</Text>
+            <Text style={styles.updatedAt}>기준일 2024/01/12</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowItem}>전세: 5000만원</Text>
+            <Text style={styles.updatedAt}>기준일 2024/01/12</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.rowItem}>
@@ -40,7 +44,6 @@ const Post = ({ post }: Props) => {
               <AntDesign name="staro" size={14} color="black" />
               <AntDesign name="staro" size={14} color="black" />
             </Text>
-            <Text style={styles.rowItem}>전세</Text>
           </View>
           <View style={styles.iconContainer}>
             <IconWithCount
@@ -91,6 +94,12 @@ const styles = StyleSheet.create({
   },
   rowItem: {
     flex: 1,
+  },
+  updatedAt: {
+    fontSize: 11,
+    textDecorationLine: "underline",
+    color: "#6b7280",
+    textAlign: "right",
   },
   address: { fontSize: 16, fontWeight: "bold", marginBottom: 2 },
   buildingName: { fontSize: 14, fontWeight: "bold" },

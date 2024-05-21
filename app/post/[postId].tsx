@@ -14,9 +14,9 @@ import IconWithCount from "@/components/common/IconWithCount";
 import TextInput from "@/components/common/TextInput";
 import useAuth from "@/hooks/useAuth";
 import { User } from "@/context/AuthProvider";
-import Map from "@/components/post/Map";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { AxiosResponse } from "axios";
+import KakaoMap from "@/components/post/KakaoMap";
 
 interface IPost {
   latitude: string;
@@ -30,26 +30,26 @@ const Post = () => {
   const { auth } = useAuth();
   console.log("postId", postId);
 
-  // fetch data
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const response = await axiosPrivate.get<string, AxiosResponse<IPost>>(
-          `/api/posts/${postId}`
-        );
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchPost();
   }, [postId]);
+
+  // 포스트 정보 가져오기
+  const fetchPost = async () => {
+    try {
+      const response = await axiosPrivate.get<string, AxiosResponse<IPost>>(
+        `/api/posts/${postId}`
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView nestedScrollEnabled>
-        <Map />
+        <KakaoMap />
         {/* <ImageSwiper /> */}
         <BuildingInfo />
         <Content />

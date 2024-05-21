@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Platform } from "react-native";
 import { WebView } from "react-native-webview";
 
-const Map = () => {
+const KakaoMap = () => {
   return (
     <WebView
       style={styles.map}
@@ -21,7 +21,7 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default KakaoMap;
 
 const styles = StyleSheet.create({
   map: {

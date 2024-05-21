@@ -8,7 +8,7 @@ import React from "react";
 import { useState } from "react";
 import { Pressable, View, Text, StyleSheet } from "react-native";
 
-export type BuildingType = "APARTMENT" | "house" | "villa" | "officetel" | null;
+export type BuildingType = "apartment" | "house" | "villa" | "officetel" | null;
 
 type BuildingSelectorProps = {
   onBuildingTypeChange: (type: BuildingType) => void;
@@ -35,14 +35,13 @@ const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
         <FontAwesome
           name="building"
           size={24}
-          color={buildingType === "officetel" ? "#000" : "#d1d5db"}
+          color={buildingType === "officetel" ? "#22c55e" : "#000"}
         />
         <Text
-          style={
-            buildingType === "officetel"
-              ? styles.text
-              : styles.selectedBuildingText
-          }
+          style={[
+            styles.buttonText,
+            buildingType === "officetel" && styles.buttonTextSelected,
+          ]}
         >
           오피스텔
         </Text>
@@ -50,21 +49,20 @@ const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
       <Pressable
         style={[
           styles.building_item,
-          buildingType === "APARTMENT" && styles.selected_building_item,
+          buildingType === "apartment" && styles.selected_building_item,
         ]}
-        onPress={() => handleBuildingType("APARTMENT")}
+        onPress={() => handleBuildingType("apartment")}
       >
         <MaterialIcons
           name="apartment"
           size={24}
-          color={buildingType === "APARTMENT" ? "#000" : "#d1d5db"}
+          color={buildingType === "apartment" ? "#22c55e" : "#000"}
         />
         <Text
-          style={
-            buildingType === "APARTMENT"
-              ? styles.text
-              : styles.selectedBuildingText
-          }
+          style={[
+            styles.buttonText,
+            buildingType === "apartment" && styles.buttonTextSelected,
+          ]}
         >
           아파트
         </Text>
@@ -79,12 +77,13 @@ const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
         <FontAwesome6
           name="house-chimney"
           size={24}
-          color={buildingType === "house" ? "#000" : "#d1d5db"}
+          color={buildingType === "house" ? "#22c55e" : "#000"}
         />
         <Text
-          style={
-            buildingType === "house" ? styles.text : styles.selectedBuildingText
-          }
+          style={[
+            styles.buttonText,
+            buildingType === "house" && styles.buttonTextSelected,
+          ]}
         >
           주택
         </Text>
@@ -99,12 +98,13 @@ const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
         <FontAwesome5
           name="building"
           size={24}
-          color={buildingType === "villa" ? "#000" : "#d1d5db"}
+          color={buildingType === "villa" ? "#22c55e" : "#000"}
         />
         <Text
-          style={
-            buildingType === "villa" ? styles.text : styles.selectedBuildingText
-          }
+          style={[
+            styles.buttonText,
+            buildingType === "villa" && styles.buttonTextSelected,
+          ]}
         >
           빌라
         </Text>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   building_container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginVertical: 10,
   },
   building_item: {
     width: "20%",
@@ -134,29 +134,21 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "#d1d5db",
+    opacity: 0.4,
   },
   selected_building_item: {
-    borderColor: "#000",
-  },
-  text: { color: "#000" },
-  selectedBuildingText: {
-    color: "#d1d5db",
-  },
-  input_container: {
-    flexDirection: "row",
-    alignItems: "center",
-    columnGap: 10,
-  },
-  button: {
-    padding: 12,
-    backgroundColor: "#22c55e",
-    borderWidth: 1,
     borderColor: "#22c55e",
-    fontWeight: "bold",
-    color: "#fff",
-    overflow: "hidden",
-    borderRadius: 5,
+    opacity: 1,
+    borderWidth: 2,
+  },
+  selectedBuildingText: {
+    color: "#22c55e",
+  },
+  buttonTextSelected: {
+    color: "#22c55e",
+  },
+  buttonText: {
+    color: "#000",
     textAlign: "center",
   },
 });

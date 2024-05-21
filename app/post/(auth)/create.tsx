@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
 import TextInput from "@/components/common/TextInput";
 import React from "react";
@@ -12,6 +12,7 @@ import Residency from "@/components/post/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "expo-router";
+import ContractSelector from "@/components/post/ContractSelector";
 
 type Post = {
   buildingType: BuildingType;
@@ -103,7 +104,11 @@ const Create = () => {
 
   // view
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      nestedScrollEnabled
+      showsVerticalScrollIndicator={false}
+    >
       <Text style={styles.title}>거주 기간</Text>
       <Residency
         onDateChange={residencyHandler}
@@ -113,6 +118,9 @@ const Create = () => {
 
       <Text style={styles.title}>건물 유형</Text>
       <BuildingSelector onBuildingTypeChange={buildingTypeHandler} />
+
+      <Text style={styles.title}>임대차 계약</Text>
+      <ContractSelector />
 
       <Text style={styles.title}>이미지</Text>
       <ImageSelector onImageChange={imageHandler} />
@@ -142,7 +150,7 @@ const Create = () => {
           </Text>
         )}
       </Pressable>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -151,6 +159,7 @@ export default Create;
 const styles = StyleSheet.create({
   container: {
     margin: 15,
+    marginBottom: 100,
   },
   title: {
     fontSize: 20,

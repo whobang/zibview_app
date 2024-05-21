@@ -9,9 +9,23 @@ import { LocationObject } from "expo-location";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useAuth0 } from "react-native-auth0";
 
+interface IPost {
+  postId: number;
+  address: string;
+  buildingName: string;
+  imageUrl: string;
+  likeCount: number;
+  commentCount: number;
+  monthlyRent: number;
+  monthlyRentUpdatedAt: Date;
+  annualRent: number;
+  annualRentUpdatedAt: Date;
+}
+
 export default function HomeScreen() {
   // state
   const [location, setLocation] = useState<LocationObject | null>(null);
+  const [posts, setPosts] = useState<IPost[]>([]);
 
   // hooks
   const { user } = useAuth0();
@@ -24,7 +38,8 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-    // fetchPosts();
+    if (!location) return;
+    fetchPosts();
   }, [location]);
 
   // 로그인한 사용자의 위치를 저장
