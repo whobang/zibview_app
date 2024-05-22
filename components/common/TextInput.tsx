@@ -39,7 +39,7 @@ const TextInput = ({
         style={[
           styles.input,
           {
-            borderColor: focused ? "#2563EB" : "#9ca3af",
+            borderColor: focused ? "#22c55e" : "#9ca3af",
             height: multiline ? 150 : 40,
           },
         ]}

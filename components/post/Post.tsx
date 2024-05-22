@@ -29,7 +29,7 @@ const Post = ({ post }: Props) => {
           <Text style={styles.address}>{post.address}</Text>
           <Text style={styles.buildingName}>{post.buildingName}</Text>
           <View style={styles.row}>
-            <Text style={styles.rowItem}>월세: 50만원</Text>
+            <Text style={styles.rowItem}>월세: 1000/50만원</Text>
             <Text style={styles.updatedAt}>기준일 2024/01/12</Text>
           </View>
           <View style={styles.row}>
@@ -37,14 +37,10 @@ const Post = ({ post }: Props) => {
             <Text style={styles.updatedAt}>기준일 2024/01/12</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.rowItem}>
-              별점: <AntDesign name="staro" size={14} color="black" />
-              <AntDesign name="staro" size={14} color="black" />
-              <AntDesign name="staro" size={14} color="black" />
-              <AntDesign name="staro" size={14} color="black" />
-              <AntDesign name="staro" size={14} color="black" />
-            </Text>
+            <Text style={styles.rowItem}>반전세: 5000만원</Text>
+            <Text style={styles.updatedAt}>기준일 2024/01/12</Text>
           </View>
+
           <View style={styles.iconContainer}>
             <IconWithCount
               icon={<AntDesign name="like2" size={16} color="black" />}
@@ -54,6 +50,13 @@ const Post = ({ post }: Props) => {
               icon={<AntDesign name="message1" size={16} color="black" />}
               count={post.chatCount}
             />
+            <Text style={styles.rowItem}>
+              별점: <AntDesign name="staro" size={14} color="black" />
+              <AntDesign name="staro" size={14} color="black" />
+              <AntDesign name="staro" size={14} color="black" />
+              <AntDesign name="staro" size={14} color="black" />
+              <AntDesign name="staro" size={14} color="black" />
+            </Text>
           </View>
         </View>
       </View>

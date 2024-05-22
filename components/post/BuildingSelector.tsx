@@ -133,13 +133,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
     borderRadius: 15,
-    borderWidth: 1,
+    borderWidth: 2,
     opacity: 0.4,
   },
   selected_building_item: {
     borderColor: "#22c55e",
     opacity: 1,
     borderWidth: 2,
+    transform: [{ translateY: -2 }],
   },
   selectedBuildingText: {
     color: "#22c55e",
