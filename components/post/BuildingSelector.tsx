@@ -8,7 +8,7 @@ import React from "react";
 import { useState } from "react";
 import { Pressable, View, Text, StyleSheet } from "react-native";
 
-export type BuildingType = "apartment" | "house" | "villa" | "officetel" | null;
+export type BuildingType = "APARTMENT" | "HOUSE" | "VILLA" | "OFFICETEL" | null;
 
 type BuildingSelectorProps = {
   onBuildingTypeChange: (type: BuildingType) => void;
@@ -16,7 +16,7 @@ type BuildingSelectorProps = {
 
 const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
   // state
-  const [buildingType, setBuildingType] = useState<BuildingType>("officetel");
+  const [buildingType, setBuildingType] = useState<BuildingType>("OFFICETEL");
 
   const handleBuildingType = (type: BuildingType) => {
     onBuildingTypeChange(type);
@@ -28,19 +28,19 @@ const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
       <Pressable
         style={[
           styles.building_item,
-          buildingType === "officetel" && styles.selected_building_item,
+          buildingType === "OFFICETEL" && styles.selected_building_item,
         ]}
-        onPress={() => handleBuildingType("officetel")}
+        onPress={() => handleBuildingType("OFFICETEL")}
       >
         <FontAwesome
           name="building"
           size={24}
-          color={buildingType === "officetel" ? "#22c55e" : "#000"}
+          color={buildingType === "OFFICETEL" ? "#22c55e" : "#000"}
         />
         <Text
           style={[
             styles.buttonText,
-            buildingType === "officetel" && styles.buttonTextSelected,
+            buildingType === "OFFICETEL" && styles.buttonTextSelected,
           ]}
         >
           오피스텔
@@ -49,19 +49,19 @@ const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
       <Pressable
         style={[
           styles.building_item,
-          buildingType === "apartment" && styles.selected_building_item,
+          buildingType === "APARTMENT" && styles.selected_building_item,
         ]}
-        onPress={() => handleBuildingType("apartment")}
+        onPress={() => handleBuildingType("APARTMENT")}
       >
         <MaterialIcons
           name="apartment"
           size={24}
-          color={buildingType === "apartment" ? "#22c55e" : "#000"}
+          color={buildingType === "APARTMENT" ? "#22c55e" : "#000"}
         />
         <Text
           style={[
             styles.buttonText,
-            buildingType === "apartment" && styles.buttonTextSelected,
+            buildingType === "APARTMENT" && styles.buttonTextSelected,
           ]}
         >
           아파트
@@ -70,19 +70,19 @@ const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
       <Pressable
         style={[
           styles.building_item,
-          buildingType === "house" && styles.selected_building_item,
+          buildingType === "HOUSE" && styles.selected_building_item,
         ]}
-        onPress={() => handleBuildingType("house")}
+        onPress={() => handleBuildingType("HOUSE")}
       >
         <FontAwesome6
           name="house-chimney"
           size={24}
-          color={buildingType === "house" ? "#22c55e" : "#000"}
+          color={buildingType === "HOUSE" ? "#22c55e" : "#000"}
         />
         <Text
           style={[
             styles.buttonText,
-            buildingType === "house" && styles.buttonTextSelected,
+            buildingType === "HOUSE" && styles.buttonTextSelected,
           ]}
         >
           주택
@@ -91,19 +91,19 @@ const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
       <Pressable
         style={[
           styles.building_item,
-          buildingType === "villa" && styles.selected_building_item,
+          buildingType === "VILLA" && styles.selected_building_item,
         ]}
-        onPress={() => handleBuildingType("villa")}
+        onPress={() => handleBuildingType("VILLA")}
       >
         <FontAwesome5
           name="building"
           size={24}
-          color={buildingType === "villa" ? "#22c55e" : "#000"}
+          color={buildingType === "VILLA" ? "#22c55e" : "#000"}
         />
         <Text
           style={[
             styles.buttonText,
-            buildingType === "villa" && styles.buttonTextSelected,
+            buildingType === "VILLA" && styles.buttonTextSelected,
           ]}
         >
           빌라

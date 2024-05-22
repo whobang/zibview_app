@@ -23,10 +23,14 @@ type Post = {
   description: string;
   address: AddressState;
   imageUuids: string[];
+  contractInfo: ContractInfo;
+};
+
+interface ContractInfo extends ContractPrice {
   residencyStartDate: Date;
   residencyEndDate: Date;
   contractPrice: ContractPrice;
-};
+}
 
 /**
  * @description 게시글 작성 페이지
@@ -35,8 +39,10 @@ const Create = () => {
   // state
   const [post, setPost] = useState<Post>({
     buildingType: "OFFICETEL" as BuildingType,
-    residencyStartDate: new Date(),
-    residencyEndDate: new Date(),
+    contractInfo: {
+      residencyStartDate: new Date(),
+      residencyEndDate: new Date(),
+    },
   } as Post);
 
   // hooks
@@ -119,8 +125,8 @@ const Create = () => {
       <Text style={styles.title}>거주 기간</Text>
       <Residency
         onDateChange={residencyHandler}
-        residencyStartDate={post.residencyStartDate}
-        residencyEndDate={post.residencyEndDate}
+        residencyStartDate={post.contractInfo.residencyStartDate}
+        residencyEndDate={post.contractInfo.residencyEndDate}
       />
 
       <Text style={styles.title}>건물 유형</Text>

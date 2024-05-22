@@ -6,14 +6,14 @@ type RentType = "DepositRent" | "MonthlyRent" | "MixedRent"; // 전제, 월세, 
 
 export type ContractPrice = {
   deposit: string | undefined;
-  monthly: string | undefined;
-  management: string | undefined;
+  monthlyFee: string | undefined;
+  maintenanceFee: string | undefined;
 };
 
 const defaultValue = {
   deposit: undefined,
-  monthly: undefined,
-  management: undefined,
+  monthlyFee: undefined,
+  maintenanceFee: undefined,
 };
 
 const rental = {
@@ -45,6 +45,25 @@ const ContractSelector = ({ onContractPriceChange }: Props) => {
     onContractPriceChange(updatedContractPrice);
   };
 
+  // Input Field Component
+  const inputField = (
+    label: string,
+    value: string | undefined,
+    key: keyof ContractPrice
+  ) => (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.inputInnerContainer}>
+        <UnderlineTextInput
+          placeholder={label}
+          value={value}
+          onChangeText={(text) => handlePriceChange({ [key]: text })}
+        />
+      </View>
+      <Text style={styles.won}>만원</Text>
+    </View>
+  );
+
   // button components
   const buttons = Object.keys(rental).map((key) => {
     return (
@@ -70,41 +89,14 @@ const ContractSelector = ({ onContractPriceChange }: Props) => {
     <>
       <View style={styles.buttonContainer}>{buttons}</View>
       <View style={styles.innerContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>{rental[rentType]} 보증금</Text>
-          <View style={styles.inputInnerContainer}>
-            <UnderlineTextInput
-              placeholder={`${rental[rentType]} 보증금`}
-              value={contractPrice.deposit}
-              onChangeText={(deposit) => handlePriceChange({ deposit })}
-            />
-          </View>
-          <Text style={styles.won}>만원</Text>
-        </View>
-        {rentType !== "DepositRent" && (
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>월세</Text>
-            <View style={styles.inputInnerContainer}>
-              <UnderlineTextInput
-                placeholder="월세"
-                value={contractPrice.monthly}
-                onChangeText={(monthly) => handlePriceChange({ monthly })}
-              />
-            </View>
-            <Text style={styles.won}>만원</Text>
-          </View>
+        {inputField(
+          `${rental[rentType]} 보증금`,
+          contractPrice.deposit,
+          "deposit"
         )}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>관리비</Text>
-          <View style={styles.inputInnerContainer}>
-            <UnderlineTextInput
-              placeholder="관리비"
-              value={contractPrice.management}
-              onChangeText={(management) => handlePriceChange({ management })}
-            />
-          </View>
-          <Text style={styles.won}>만원</Text>
-        </View>
+        {rentType !== "DepositRent" &&
+          inputField("월세", contractPrice.monthlyFee, "monthlyFee")}
+        {inputField("관리비", contractPrice.maintenanceFee, "maintenanceFee")}
       </View>
     </>
   );
