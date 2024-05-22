@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { RecoilRoot } from "recoil";
 import React from "react";
 import { AuthProvider } from "@/context/AuthProvider";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import {
   DarkTheme,
@@ -62,14 +63,19 @@ export default function RootLayout() {
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
           <AuthProvider>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-              <Stack.Screen
-                name="address/modal"
-                options={{ presentation: "modal" }}
-              />
-            </Stack>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="modal"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
+                  name="address/modal"
+                  options={{ presentation: "modal" }}
+                />
+              </Stack>
+            </GestureHandlerRootView>
           </AuthProvider>
         </ThemeProvider>
       </RecoilRoot>

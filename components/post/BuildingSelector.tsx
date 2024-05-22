@@ -8,7 +8,7 @@ import React from "react";
 import { useState } from "react";
 import { Pressable, View, Text, StyleSheet } from "react-native";
 
-export type BuildingType = "APARTMENT" | "HOUSE" | "VILLA" | "OFFICETEL" | null;
+export type BuildingType = "APARTMENT" | "HOUSE" | "VILLA" | "OFFICETEL";
 
 type BuildingSelectorProps = {
   onBuildingTypeChange: (type: BuildingType) => void;

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
+import { StyleSheet, Text, Pressable, ScrollView } from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
-import TextInput from "@/components/common/TextInput";
 import React from "react";
 import BuildingSelector, {
   BuildingType,
@@ -15,22 +14,13 @@ import { useRouter } from "expo-router";
 import ContractSelector, {
   ContractPrice,
 } from "@/components/post/ContractSelector";
-import { IPost } from "@/types/post/type";
+import { IPost, PostSchema } from "@/types/post/type";
+import { useForm } from "react-hook-form";
+import FormField from "@/components/common/FormField";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type Post = {
-  buildingType: BuildingType;
-  title: string;
-  description: string;
-  address: AddressState;
-  imageUuids: string[];
-  contractInfo: ContractInfo;
-};
-
-interface ContractInfo extends ContractPrice {
-  residencyStartDate: Date;
-  residencyEndDate: Date;
-  contractPrice: ContractPrice;
-}
+type Post = z.infer<typeof PostSchema>;
 
 /**
  * @description 게시글 작성 페이지
@@ -49,6 +39,11 @@ const Create = () => {
   const router = useRouter();
   const address = useRecoilValue(addressState);
   const axiosPrivate = useAxiosPrivate();
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<Post>({ resolver: zodResolver(PostSchema) });
 
   useEffect(() => {
     setPost((prev) => {
@@ -104,7 +99,6 @@ const Create = () => {
   // 게시글 등록 API 호출
   const registerPost = async () => {
     // TODO: Validation
-
     await axiosPrivate
       .post<Post, AxiosResponse<IPost>>("/api/posts", post)
       .then(({ data }) => {
@@ -139,16 +133,24 @@ const Create = () => {
       <ImageSelector onImageChange={imageHandler} />
 
       <Text style={styles.title}>제목</Text>
-      <TextInput placeholder="제목" onChangeText={titleHandler} />
+      <FormField
+        name="title"
+        control={control}
+        error={errors.title}
+        helperText={errors.title?.message?.toString()}
+      ></FormField>
 
       <Text style={styles.title}>자세한 설명</Text>
-      <TextInput
-        onChangeText={descriptionHandler}
-        placeholder="현재 집의 상태나 계약 진행 과정을 상세하게 적어주세요."
+      <FormField
+        name="description"
+        control={control}
+        error={errors.description}
+        helperText={errors.description?.message?.toString()}
         multiline
-      />
+        placeholder="현재 집의 상태나 계약 진행 과정을 상세하게 적어주세요."
+      ></FormField>
 
-      <Pressable onPress={registerPost}>
+      <Pressable onPress={handleSubmit(registerPost)}>
         {({ pressed }) => (
           <Text
             style={[

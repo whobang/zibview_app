@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { StyleSheet, Pressable, Text, View, Alert } from "react-native";
-
 import DatePicker from "react-native-date-picker";
+import { Incubator } from "react-native-ui-lib";
+
+const { Toast } = Incubator;
+
+type Toast = {
+  visible: boolean;
+  message?: string;
+};
 
 type Props = {
   onDateChange: (startDate: Date, endDate: Date) => void;
@@ -15,6 +22,7 @@ const Residency = ({
   residencyEndDate,
 }: Props) => {
   // state
+  const [toast, setToast] = useState<Toast>({ visible: false });
   const [startDate, setStartDate] = useState(residencyStartDate);
   const [openStart, setOpenStart] = useState(false);
   const [endDate, setEndDate] = useState(residencyEndDate);
@@ -23,7 +31,10 @@ const Residency = ({
   const startDateConfirmHandler = (date: Date) => {
     setOpenStart(false);
     if (date > endDate) {
-      Alert.alert("시작일은 종료일보다 이전이어야 합니다.");
+      setToast({
+        visible: true,
+        message: "종료일보다 이전이어야 합니다.",
+      });
       return;
     }
 
@@ -34,7 +45,10 @@ const Residency = ({
   const endDateConfirmHandler = (date: Date) => {
     setOpenEnd(false);
     if (date < startDate) {
-      Alert.alert("종료일은 시작일보다 이후여야 합니다.");
+      setToast({
+        visible: true,
+        message: "시작일보다 이후여야 합니다.",
+      });
       return;
     }
 
@@ -44,48 +58,60 @@ const Residency = ({
 
   // view
   return (
-    <View style={styles.container}>
-      <Pressable
-        style={({ pressed }) => [styles.button, pressed && styles.pressed]}
-        onPress={() => setOpenStart(true)}
-      >
-        <Text>{startDate.getFullYear()}년 </Text>
-        <Text>{startDate.getMonth() + 1}월 </Text>
-        <Text>{startDate.getDate()}일</Text>
-      </Pressable>
-      <View style={styles.tildeContainer}>
-        <Text style={styles.tilde}>~</Text>
-      </View>
-      <Pressable
-        style={({ pressed }) => [styles.button, pressed && styles.pressed]}
-        onPress={() => setOpenEnd(true)}
-      >
-        <Text>{endDate.getFullYear()}년 </Text>
-        <Text>{endDate.getMonth() + 1}월 </Text>
-        <Text>{endDate.getDate()}일</Text>
-      </Pressable>
+    <>
+      <View style={styles.container}>
+        <Pressable
+          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+          onPress={() => setOpenStart(true)}
+        >
+          <Text>{startDate.getFullYear()}년 </Text>
+          <Text>{startDate.getMonth() + 1}월 </Text>
+          <Text>{startDate.getDate()}일</Text>
+        </Pressable>
+        <View style={styles.tildeContainer}>
+          <Text style={styles.tilde}>~</Text>
+        </View>
+        <Pressable
+          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+          onPress={() => setOpenEnd(true)}
+        >
+          <Text>{endDate.getFullYear()}년 </Text>
+          <Text>{endDate.getMonth() + 1}월 </Text>
+          <Text>{endDate.getDate()}일</Text>
+        </Pressable>
 
-      <DatePicker
-        modal
-        title="거주 시작일"
-        open={openStart}
-        date={startDate}
-        mode="date"
-        locale="ko"
-        onConfirm={startDateConfirmHandler}
-        onCancel={() => setOpenStart(false)}
+        <DatePicker
+          modal
+          title="거주 시작일"
+          open={openStart}
+          date={startDate}
+          mode="date"
+          locale="ko"
+          onConfirm={startDateConfirmHandler}
+          onCancel={() => setOpenStart(false)}
+        />
+        <DatePicker
+          modal
+          title="거주 종료일"
+          open={openEnd}
+          date={endDate}
+          mode="date"
+          locale="ko"
+          onConfirm={endDateConfirmHandler}
+          onCancel={() => setOpenEnd(false)}
+        />
+      </View>
+      <Toast
+        visible={toast.visible}
+        position="top"
+        message={toast.message}
+        preset="failure"
+        swipeable
+        autoDismiss={5000}
+        enableHapticFeedback
+        onDismiss={() => setToast({ visible: false, message: "" })}
       />
-      <DatePicker
-        modal
-        title="거주 종료일"
-        open={openEnd}
-        date={endDate}
-        mode="date"
-        locale="ko"
-        onConfirm={endDateConfirmHandler}
-        onCancel={() => setOpenEnd(false)}
-      />
-    </View>
+    </>
   );
 };
 
