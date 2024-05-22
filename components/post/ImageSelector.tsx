@@ -1,5 +1,5 @@
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -19,7 +19,6 @@ interface ImageType extends ImagePicker.ImagePickerAsset {
 
 type Props = {
   onImageChange: (imageUuids: string[]) => void;
-  // axiosPrivate: ReturnType<typeof useAxiosPrivate>;
 };
 
 const ImageSelector = ({ onImageChange }: Props) => {
@@ -148,7 +147,7 @@ const ImageSelector = ({ onImageChange }: Props) => {
   );
 };
 
-export default ImageSelector;
+export default memo(ImageSelector);
 
 const styles = StyleSheet.create({
   image: {

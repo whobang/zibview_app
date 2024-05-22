@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
 import TextInput from "@/components/common/TextInput";
@@ -10,9 +10,12 @@ import { AddressState, addressState } from "@/atom/addressState";
 import { useRecoilValue } from "recoil";
 import Residency from "@/components/post/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { useRouter } from "expo-router";
-import ContractSelector from "@/components/post/ContractSelector";
+import ContractSelector, {
+  ContractPrice,
+} from "@/components/post/ContractSelector";
+import { IPost } from "@/types/post/type";
 
 type Post = {
   buildingType: BuildingType;
@@ -22,11 +25,8 @@ type Post = {
   imageUuids: string[];
   residencyStartDate: Date;
   residencyEndDate: Date;
+  contractPrice: ContractPrice;
 };
-
-interface IPost {
-  postId: number;
-}
 
 /**
  * @description 게시글 작성 페이지
@@ -67,6 +67,20 @@ const Create = () => {
     });
   };
 
+  // 이미지 변경 핸들러
+  const imageHandler = useCallback((imageUuids: string[]) => {
+    setPost((prev) => {
+      return { ...prev, imageUuids };
+    });
+  }, []);
+
+  // 임대차 계약 변경 핸들러
+  const contractHandler = (contractPrice: ContractPrice) => {
+    setPost((prev) => {
+      return { ...prev, contractPrice };
+    });
+  };
+
   // 제목 변경 핸들러
   const titleHandler = (title: string) => {
     setPost((prev) => {
@@ -78,13 +92,6 @@ const Create = () => {
   const descriptionHandler = (description: string) => {
     setPost((prev) => {
       return { ...prev, description };
-    });
-  };
-
-  // 이미지 변경 핸들러
-  const imageHandler = (imageUuids: string[]) => {
-    setPost((prev) => {
-      return { ...prev, imageUuids };
     });
   };
 
@@ -120,7 +127,7 @@ const Create = () => {
       <BuildingSelector onBuildingTypeChange={buildingTypeHandler} />
 
       <Text style={styles.title}>임대차 계약</Text>
-      <ContractSelector />
+      <ContractSelector onContractPriceChange={contractHandler} />
 
       <Text style={styles.title}>이미지</Text>
       <ImageSelector onImageChange={imageHandler} />
