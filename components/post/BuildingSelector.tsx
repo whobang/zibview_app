@@ -1,3 +1,4 @@
+import { buildingTypeSchema } from "@/types/post/type";
 import {
   FontAwesome,
   FontAwesome5,
@@ -7,8 +8,9 @@ import {
 import React from "react";
 import { useState } from "react";
 import { Pressable, View, Text, StyleSheet } from "react-native";
+import { z } from "zod";
 
-export type BuildingType = "APARTMENT" | "HOUSE" | "VILLA" | "OFFICETEL";
+type BuildingType = z.infer<typeof buildingTypeSchema>;
 
 type BuildingSelectorProps = {
   onBuildingTypeChange: (type: BuildingType) => void;

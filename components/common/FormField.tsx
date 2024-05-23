@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     padding: 10,
     marginBottom: 5,
+    color: "#000",
   },
   focused: {
     borderColor: Colors.primary,

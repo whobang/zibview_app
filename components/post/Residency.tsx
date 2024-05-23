@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { StyleSheet, Pressable, Text, View, Alert } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { Incubator } from "react-native-ui-lib";
@@ -10,50 +11,52 @@ type Toast = {
   message?: string;
 };
 
-type Props = {
-  onDateChange: (startDate: Date, endDate: Date) => void;
-  residencyStartDate: Date;
-  residencyEndDate: Date;
+type Props<T extends FieldValues> = {
+  name: Path<T>[];
+  control: Control<T, any>;
+  contractStartDate: Date;
+  contractEndDate: Date;
 };
 
-const Residency = ({
-  onDateChange,
-  residencyStartDate,
-  residencyEndDate,
-}: Props) => {
+const Residency = <T extends FieldValues>({
+  name,
+  control,
+  contractStartDate,
+  contractEndDate,
+}: Props<T>) => {
   // state
   const [toast, setToast] = useState<Toast>({ visible: false });
-  const [startDate, setStartDate] = useState(residencyStartDate);
   const [openStart, setOpenStart] = useState(false);
-  const [endDate, setEndDate] = useState(residencyEndDate);
   const [openEnd, setOpenEnd] = useState(false);
 
-  const startDateConfirmHandler = (date: Date) => {
+  const startDateConfirmHandler = (
+    startDate: Date,
+    onChange: (...event: any[]) => void
+  ) => {
     setOpenStart(false);
-    if (date > endDate) {
+    if (startDate > contractEndDate) {
       setToast({
         visible: true,
         message: "종료일보다 이전이어야 합니다.",
       });
       return;
     }
-
-    setStartDate(date);
-    onDateChange(date, endDate);
+    onChange(startDate);
   };
 
-  const endDateConfirmHandler = (date: Date) => {
+  const endDateConfirmHandler = (
+    endDate: Date,
+    onChange: (...event: any[]) => void
+  ) => {
     setOpenEnd(false);
-    if (date < startDate) {
+    if (endDate < contractStartDate) {
       setToast({
         visible: true,
         message: "시작일보다 이후여야 합니다.",
       });
       return;
     }
-
-    setEndDate(date);
-    onDateChange(startDate, date);
+    onChange(endDate);
   };
 
   // view
@@ -64,9 +67,9 @@ const Residency = ({
           style={({ pressed }) => [styles.button, pressed && styles.pressed]}
           onPress={() => setOpenStart(true)}
         >
-          <Text>{startDate.getFullYear()}년 </Text>
-          <Text>{startDate.getMonth() + 1}월 </Text>
-          <Text>{startDate.getDate()}일</Text>
+          <Text>{contractStartDate.getFullYear()}년 </Text>
+          <Text>{contractStartDate.getMonth() + 1}월 </Text>
+          <Text>{contractStartDate.getDate()}일</Text>
         </Pressable>
         <View style={styles.tildeContainer}>
           <Text style={styles.tilde}>~</Text>
@@ -75,30 +78,49 @@ const Residency = ({
           style={({ pressed }) => [styles.button, pressed && styles.pressed]}
           onPress={() => setOpenEnd(true)}
         >
-          <Text>{endDate.getFullYear()}년 </Text>
-          <Text>{endDate.getMonth() + 1}월 </Text>
-          <Text>{endDate.getDate()}일</Text>
+          <Text>{contractEndDate.getFullYear()}년 </Text>
+          <Text>{contractEndDate.getMonth() + 1}월 </Text>
+          <Text>{contractEndDate.getDate()}일</Text>
         </Pressable>
 
-        <DatePicker
-          modal
-          title="거주 시작일"
-          open={openStart}
-          date={startDate}
-          mode="date"
-          locale="ko"
-          onConfirm={startDateConfirmHandler}
-          onCancel={() => setOpenStart(false)}
+        <Controller
+          control={control}
+          name={name[0]}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <DatePicker
+              modal
+              title="거주 시작일"
+              open={openStart}
+              date={value}
+              mode="date"
+              locale="ko"
+              onConfirm={(date) => startDateConfirmHandler(date, onChange)}
+              onCancel={() => setOpenStart(false)}
+            />
+          )}
         />
-        <DatePicker
-          modal
-          title="거주 종료일"
-          open={openEnd}
-          date={endDate}
-          mode="date"
-          locale="ko"
-          onConfirm={endDateConfirmHandler}
-          onCancel={() => setOpenEnd(false)}
+
+        <Controller
+          control={control}
+          name={name[1]}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <DatePicker
+              modal
+              title="거주 종료일"
+              open={openEnd}
+              date={value}
+              mode="date"
+              locale="ko"
+              onConfirm={(date) => endDateConfirmHandler(date, onChange)}
+              onCancel={() => setOpenEnd(false)}
+            />
+          )}
         />
       </View>
       <Toast

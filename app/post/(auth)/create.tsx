@@ -2,10 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, Pressable, ScrollView } from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
 import React from "react";
-import BuildingSelector, {
-  BuildingType,
-} from "@/components/post/BuildingSelector";
-import { AddressState, addressState } from "@/atom/addressState";
+import BuildingSelector from "@/components/post/BuildingSelector";
+import { addressState } from "@/atom/addressState";
 import { useRecoilValue } from "recoil";
 import Residency from "@/components/post/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -14,52 +12,39 @@ import { useRouter } from "expo-router";
 import ContractSelector, {
   ContractPrice,
 } from "@/components/post/ContractSelector";
-import { IPost, PostSchema } from "@/types/post/type";
+import { BuildingType, IPost, Post, postSchema } from "@/types/post/type";
 import { useForm } from "react-hook-form";
 import FormField from "@/components/common/FormField";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-type Post = z.infer<typeof PostSchema>;
 
 /**
  * @description 게시글 작성 페이지
  */
 const Create = () => {
   // state
+  const address = useRecoilValue(addressState);
   const [post, setPost] = useState<Post>({
-    buildingType: "OFFICETEL" as BuildingType,
+    buildingType: "OFFICETEL",
+    address: address,
     contractInfo: {
-      residencyStartDate: new Date(),
-      residencyEndDate: new Date(),
+      contractStartDate: new Date(),
+      contractEndDate: new Date(),
     },
   } as Post);
 
+  console.log("post: ", post);
+
   // hooks
   const router = useRouter();
-  const address = useRecoilValue(addressState);
   const axiosPrivate = useAxiosPrivate();
   const {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<Post>({ resolver: zodResolver(PostSchema) });
+  } = useForm<Post>({ resolver: zodResolver(postSchema), defaultValues: post });
 
-  useEffect(() => {
-    setPost((prev) => {
-      return { ...prev, address };
-    });
-  }, [address]);
-
-  // 거주 기간 변경 핸들러
-  const residencyHandler = (
-    residencyStartDate: Date,
-    residencyEndDate: Date
-  ) => {
-    setPost((prev) => {
-      return { ...prev, residencyStartDate, residencyEndDate };
-    });
-  };
+  console.log("errors: ", errors);
 
   // 건물 유형 변경 핸들러
   const buildingTypeHandler = (type: BuildingType) => {
@@ -82,22 +67,9 @@ const Create = () => {
     });
   };
 
-  // 제목 변경 핸들러
-  const titleHandler = (title: string) => {
-    setPost((prev) => {
-      return { ...prev, title };
-    });
-  };
-
-  // 설명 변경 핸들러
-  const descriptionHandler = (description: string) => {
-    setPost((prev) => {
-      return { ...prev, description };
-    });
-  };
-
   // 게시글 등록 API 호출
   const registerPost = async () => {
+    console.log("registerPost: ", post);
     // TODO: Validation
     await axiosPrivate
       .post<Post, AxiosResponse<IPost>>("/api/posts", post)
@@ -118,9 +90,13 @@ const Create = () => {
     >
       <Text style={styles.title}>거주 기간</Text>
       <Residency
-        onDateChange={residencyHandler}
-        residencyStartDate={post.contractInfo.residencyStartDate}
-        residencyEndDate={post.contractInfo.residencyEndDate}
+        name={[
+          "contractInfo.contractStartDate",
+          "contractInfo.contractEndDate",
+        ]}
+        control={control}
+        contractStartDate={post.contractInfo.contractStartDate}
+        contractEndDate={post.contractInfo.contractEndDate}
       />
 
       <Text style={styles.title}>건물 유형</Text>
