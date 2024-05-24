@@ -12,15 +12,15 @@ type Toast = {
 };
 
 type Props<T extends FieldValues> = {
-  name: Path<T>[];
   control: Control<T, any>;
+  name: Path<T>[];
   contractStartDate: Date;
   contractEndDate: Date;
 };
 
 const Residency = <T extends FieldValues>({
-  name,
   control,
+  name,
   contractStartDate,
   contractEndDate,
 }: Props<T>) => {

@@ -98,13 +98,13 @@ const BuildingSelector = <T extends FieldValues>({
 
   // view
   return (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field: { onChange } }) => {
-        return (
-          <View style={styles.building_container}>
-            <View style={styles.building_container}>
+    <View style={styles.building_container}>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field: { onChange } }) => {
+          return (
+            <>
               {buildingOptions.map(({ type, label, Icon, iconName }) =>
                 renderBuildingOption(
                   onChange,
@@ -114,11 +114,11 @@ const BuildingSelector = <T extends FieldValues>({
                   Icon
                 )
               )}
-            </View>
-          </View>
-        );
-      }}
-    />
+            </>
+          );
+        }}
+      />
+    </View>
   );
 };
 

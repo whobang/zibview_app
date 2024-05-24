@@ -74,12 +74,10 @@ export const postSchema = z.object({
   buildingType: buildingTypeSchema,
   title: z
     .string({ required_error: "제목을 입력해주세요." })
-    .max(200, "200자 이내로 입력해주세요.")
-    .default(""),
+    .max(200, "200자 이내로 입력해주세요."),
   description: z
     .string({ required_error: "설명을 입력해주세요." })
-    .max(1000, "1000자 이내로 입력해주세요.")
-    .default(""),
+    .max(1000, "1000자 이내로 입력해주세요."),
   imageUuids: z.array(z.string()).optional(),
 });
 

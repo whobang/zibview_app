@@ -1,5 +1,5 @@
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import React, { memo, useState } from "react";
+import React, { useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -12,16 +12,18 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import uuid from "react-native-uuid";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
 interface ImageType extends ImagePicker.ImagePickerAsset {
   uuid: string;
 }
 
-type Props = {
-  onImageChange: (imageUuids: string[]) => void;
+type Props<T extends FieldValues> = {
+  control: Control<T, any>;
+  name: Path<T>;
 };
 
-const ImageSelector = ({ onImageChange }: Props) => {
+const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
   // state
   const [images, setImages] = useState<ImageType[]>([]);
 
@@ -29,7 +31,7 @@ const ImageSelector = ({ onImageChange }: Props) => {
   const axiosPrivate = useAxiosPrivate();
 
   // 이미지 추가
-  const addImage = async () => {
+  const addImage = async (onChange: (value: string[]) => void) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
@@ -51,21 +53,19 @@ const ImageSelector = ({ onImageChange }: Props) => {
       });
 
       setImages((prevState) => [...prevState, ...newImages]);
-      imageHandler(newImages);
+      onChange([
+        ...images.map((image) => image.uuid),
+        ...newImages.map((image) => image.uuid),
+      ]);
       uploadImage(createFormData(newImages));
     }
   };
 
   // 이미지 삭제
-  const removeImage = (uuid: string) => {
+  const removeImage = (uuid: string, onChange: (uuids: string[]) => void) => {
     const leftImages = images.filter((image) => image.uuid !== uuid);
     setImages(leftImages);
-    imageHandler(leftImages);
-  };
-
-  // props로 전달받은 onImageChange 핸들러
-  const imageHandler = (images: ImageType[]) => {
-    onImageChange(images.map((image) => image.uuid));
+    onChange(leftImages.map((image) => image.uuid));
   };
 
   // FormData 생성
@@ -79,6 +79,7 @@ const ImageSelector = ({ onImageChange }: Props) => {
       );
       formData.append(`images[${index}].latitudeGPS`, image.exif?.GPSLongitude);
       formData.append(`images[${index}].longitudeGPS`, image.exif?.GPSLatitude);
+      // @ts-ignore
       formData.append(`images[${index}].image`, {
         uri:
           Platform.OS === "ios" ? image.uri.replace("file://", "") : image.uri,
@@ -103,51 +104,63 @@ const ImageSelector = ({ onImageChange }: Props) => {
   };
 
   return (
-    <ScrollView
-      horizontal
-      contentContainerStyle={{ columnGap: 10, paddingVertical: 5 }}
-    >
-      <Pressable onPress={addImage}>
-        <View
-          style={{
-            borderWidth: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            width: 60,
-            height: 60,
-            borderRadius: 10,
-            borderColor: "#6b7280",
-          }}
-        >
-          <AntDesign name="camera" size={25} color="#6b7280" />
-          <Text>
-            <Text style={{ color: "#f87171" }}>{images.length}</Text>/10
-          </Text>
-        </View>
-      </Pressable>
-
-      {images.map((image) => {
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { onChange } }) => {
         return (
-          <View key={image.uuid}>
-            <Image source={{ uri: image.uri }} style={styles.image} />
+          <ScrollView
+            horizontal
+            contentContainerStyle={{ columnGap: 10, paddingVertical: 5 }}
+          >
             <Pressable
-              onPress={() => removeImage(image.uuid)}
-              style={{
-                position: "absolute",
-                right: 0,
-                transform: [{ translateY: -5 }, { translateX: 5 }],
+              onPress={() => {
+                addImage(onChange);
               }}
             >
-              <CloseIcon />
+              <View
+                style={{
+                  borderWidth: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 60,
+                  height: 60,
+                  borderRadius: 10,
+                  borderColor: "#6b7280",
+                }}
+              >
+                <AntDesign name="camera" size={25} color="#6b7280" />
+                <Text>
+                  <Text style={{ color: "#f87171" }}>{images.length}</Text>/10
+                </Text>
+              </View>
             </Pressable>
-          </View>
+
+            {images.map((image) => {
+              return (
+                <View key={image.uuid}>
+                  <Image source={{ uri: image.uri }} style={styles.image} />
+                  <Pressable
+                    onPress={() => removeImage(image.uuid, onChange)}
+                    style={{
+                      position: "absolute",
+                      right: 0,
+                      transform: [{ translateY: -5 }, { translateX: 5 }],
+                    }}
+                  >
+                    <CloseIcon />
+                  </Pressable>
+                </View>
+              );
+            })}
+          </ScrollView>
         );
-      })}
-    </ScrollView>
+      }}
+    />
   );
 };
 
-export default memo(ImageSelector);
+export default ImageSelector;
 
 const styles = StyleSheet.create({
   image: {

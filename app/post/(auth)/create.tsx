@@ -12,11 +12,10 @@ import { useRouter } from "expo-router";
 import ContractSelector, {
   ContractPrice,
 } from "@/components/post/ContractSelector";
-import { BuildingType, IPost, Post, postSchema } from "@/types/post/type";
+import { IPost, Post, postSchema } from "@/types/post/type";
 import { useForm } from "react-hook-form";
 import FormField from "@/components/common/FormField";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getDefaults } from "@/utils/zodUtils";
 import { UTCtoKST } from "@/utils/dateUtils";
 
 /**
@@ -35,14 +34,11 @@ const Create = () => {
   } = useForm<Post>({
     resolver: zodResolver(postSchema),
     defaultValues: {
-      ...getDefaults(postSchema),
-      ...{
-        buildingType: "OFFICETEL",
-        address: address,
-        contractInfo: {
-          contractStartDate: UTCtoKST(new Date()),
-          contractEndDate: UTCtoKST(new Date()),
-        },
+      buildingType: "OFFICETEL",
+      address: address,
+      contractInfo: {
+        contractStartDate: UTCtoKST(new Date()),
+        contractEndDate: UTCtoKST(new Date()),
       },
     },
   });
@@ -50,13 +46,6 @@ const Create = () => {
   console.log("getValues: ", getValues());
 
   console.log("errors: ", errors);
-
-  // 이미지 변경 핸들러
-  const imageHandler = useCallback((imageUuids: string[]) => {
-    // setPost((prev) => {
-    //   return { ...prev, imageUuids };
-    // });
-  }, []);
 
   // 임대차 계약 변경 핸들러
   const contractHandler = (contractPrice: ContractPrice) => {
@@ -67,16 +56,15 @@ const Create = () => {
 
   // 게시글 등록 API 호출
   const registerPost = async () => {
-    console.log("registerPost: ", getValues());
-    // TODO: Validation
-    // await axiosPrivate
-    //   .post<Post, AxiosResponse<IPost>>("/api/posts", post)
-    //   .then(({ data }) => {
-    //     router.replace(`/post/${data.postId}`);
-    //   })
-    //   .catch((e) => {
-    //     console.log("error: ", e);
-    //   });
+    await axiosPrivate
+      .post<Post, AxiosResponse<IPost>>("/api/posts", getValues())
+      .then(({ data, status }) => {
+        console.log();
+        router.replace(`/post/${data.postId}`);
+      })
+      .catch((e) => {
+        console.log("error: ", e);
+      });
   };
 
   // view
@@ -108,13 +96,14 @@ const Create = () => {
       <ContractSelector onContractPriceChange={contractHandler} />
 
       <Text style={styles.title}>이미지</Text>
-      <ImageSelector onImageChange={imageHandler} />
+      <ImageSelector control={control} name="imageUuids" />
 
       <Text style={styles.title}>제목</Text>
       <FormField
         name="title"
         control={control}
         error={errors.title}
+        placeholder="제목을 적어주세요."
         helperText={errors.title?.message?.toString()}
       />
 
