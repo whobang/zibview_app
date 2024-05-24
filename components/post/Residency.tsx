@@ -26,37 +26,33 @@ const Residency = <T extends FieldValues>({
 }: Props<T>) => {
   // state
   const [toast, setToast] = useState<Toast>({ visible: false });
+  const [startDate, setStartDate] = useState(contractStartDate);
   const [openStart, setOpenStart] = useState(false);
+  const [endDate, setEndDate] = useState(contractEndDate);
   const [openEnd, setOpenEnd] = useState(false);
 
-  const startDateConfirmHandler = (
-    startDate: Date,
-    onChange: (...event: any[]) => void
-  ) => {
+  const startDateConfirmHandler = (startDate: Date) => {
     setOpenStart(false);
-    if (startDate > contractEndDate) {
+    if (startDate > endDate) {
       setToast({
         visible: true,
         message: "종료일보다 이전이어야 합니다.",
       });
       return;
     }
-    onChange(startDate);
+    setStartDate(startDate);
   };
 
-  const endDateConfirmHandler = (
-    endDate: Date,
-    onChange: (...event: any[]) => void
-  ) => {
+  const endDateConfirmHandler = (endDate: Date) => {
     setOpenEnd(false);
-    if (endDate < contractStartDate) {
+    if (endDate < startDate) {
       setToast({
         visible: true,
         message: "시작일보다 이후여야 합니다.",
       });
       return;
     }
-    onChange(endDate);
+    setEndDate(endDate);
   };
 
   // view
@@ -67,9 +63,9 @@ const Residency = <T extends FieldValues>({
           style={({ pressed }) => [styles.button, pressed && styles.pressed]}
           onPress={() => setOpenStart(true)}
         >
-          <Text>{contractStartDate.getFullYear()}년 </Text>
-          <Text>{contractStartDate.getMonth() + 1}월 </Text>
-          <Text>{contractStartDate.getDate()}일</Text>
+          <Text>{startDate.getFullYear()}년 </Text>
+          <Text>{startDate.getMonth() + 1}월 </Text>
+          <Text>{startDate.getDate()}일</Text>
         </Pressable>
         <View style={styles.tildeContainer}>
           <Text style={styles.tilde}>~</Text>
@@ -78,26 +74,26 @@ const Residency = <T extends FieldValues>({
           style={({ pressed }) => [styles.button, pressed && styles.pressed]}
           onPress={() => setOpenEnd(true)}
         >
-          <Text>{contractEndDate.getFullYear()}년 </Text>
-          <Text>{contractEndDate.getMonth() + 1}월 </Text>
-          <Text>{contractEndDate.getDate()}일</Text>
+          <Text>{endDate.getFullYear()}년 </Text>
+          <Text>{endDate.getMonth() + 1}월 </Text>
+          <Text>{endDate.getDate()}일</Text>
         </Pressable>
 
         <Controller
           control={control}
           name={name[0]}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onChange } }) => (
             <DatePicker
               modal
               title="거주 시작일"
               open={openStart}
-              date={value}
+              date={contractStartDate}
               mode="date"
               locale="ko"
-              onConfirm={(date) => startDateConfirmHandler(date, onChange)}
+              onConfirm={(date) => {
+                startDateConfirmHandler(date);
+                onChange(date);
+              }}
               onCancel={() => setOpenStart(false)}
             />
           )}
@@ -106,18 +102,18 @@ const Residency = <T extends FieldValues>({
         <Controller
           control={control}
           name={name[1]}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onChange } }) => (
             <DatePicker
               modal
               title="거주 종료일"
               open={openEnd}
-              date={value}
+              date={contractEndDate}
               mode="date"
               locale="ko"
-              onConfirm={(date) => endDateConfirmHandler(date, onChange)}
+              onConfirm={(date) => {
+                endDateConfirmHandler(date);
+                onChange(date);
+              }}
               onCancel={() => setOpenEnd(false)}
             />
           )}

@@ -33,9 +33,6 @@ const FormField = <T extends FieldValues>({
       <Controller
         control={control}
         name={name}
-        rules={{
-          required: true,
-        }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             placeholder={placeholder}

@@ -15,70 +15,68 @@ import ContractSelector, {
 import { BuildingType, IPost, Post, postSchema } from "@/types/post/type";
 import { useForm } from "react-hook-form";
 import FormField from "@/components/common/FormField";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getDefaults } from "@/utils/zodUtils";
+import { UTCtoKST } from "@/utils/dateUtils";
 
 /**
  * @description 게시글 작성 페이지
  */
 const Create = () => {
-  // state
-  const address = useRecoilValue(addressState);
-  const [post, setPost] = useState<Post>({
-    buildingType: "OFFICETEL",
-    address: address,
-    contractInfo: {
-      contractStartDate: new Date(),
-      contractEndDate: new Date(),
-    },
-  } as Post);
-
-  console.log("post: ", post);
-
   // hooks
   const router = useRouter();
   const axiosPrivate = useAxiosPrivate();
+  const address = useRecoilValue(addressState);
   const {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<Post>({ resolver: zodResolver(postSchema), defaultValues: post });
+    getValues,
+  } = useForm<Post>({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      ...getDefaults(postSchema),
+      ...{
+        buildingType: "OFFICETEL",
+        address: address,
+        contractInfo: {
+          contractStartDate: UTCtoKST(new Date()),
+          contractEndDate: UTCtoKST(new Date()),
+        },
+      },
+    },
+  });
+
+  console.log("getValues: ", getValues());
 
   console.log("errors: ", errors);
 
-  // 건물 유형 변경 핸들러
-  const buildingTypeHandler = (type: BuildingType) => {
-    setPost((prev) => {
-      return { ...prev, buildingType: type };
-    });
-  };
-
   // 이미지 변경 핸들러
   const imageHandler = useCallback((imageUuids: string[]) => {
-    setPost((prev) => {
-      return { ...prev, imageUuids };
-    });
+    // setPost((prev) => {
+    //   return { ...prev, imageUuids };
+    // });
   }, []);
 
   // 임대차 계약 변경 핸들러
   const contractHandler = (contractPrice: ContractPrice) => {
-    setPost((prev) => {
-      return { ...prev, contractPrice };
-    });
+    // setPost((prev) => {
+    //   return { ...prev, contractPrice };
+    // });
   };
 
   // 게시글 등록 API 호출
   const registerPost = async () => {
-    console.log("registerPost: ", post);
+    console.log("registerPost: ", getValues());
     // TODO: Validation
-    await axiosPrivate
-      .post<Post, AxiosResponse<IPost>>("/api/posts", post)
-      .then(({ data }) => {
-        router.replace(`/post/${data.postId}`);
-      })
-      .catch((e) => {
-        console.log("error: ", e);
-      });
+    // await axiosPrivate
+    //   .post<Post, AxiosResponse<IPost>>("/api/posts", post)
+    //   .then(({ data }) => {
+    //     router.replace(`/post/${data.postId}`);
+    //   })
+    //   .catch((e) => {
+    //     console.log("error: ", e);
+    //   });
   };
 
   // view
@@ -95,12 +93,16 @@ const Create = () => {
           "contractInfo.contractEndDate",
         ]}
         control={control}
-        contractStartDate={post.contractInfo.contractStartDate}
-        contractEndDate={post.contractInfo.contractEndDate}
+        contractStartDate={getValues().contractInfo.contractStartDate}
+        contractEndDate={getValues().contractInfo.contractEndDate}
       />
 
       <Text style={styles.title}>건물 유형</Text>
-      <BuildingSelector onBuildingTypeChange={buildingTypeHandler} />
+      <BuildingSelector
+        control={control}
+        name="buildingType"
+        defaultValue={getValues().buildingType}
+      />
 
       <Text style={styles.title}>임대차 계약</Text>
       <ContractSelector onContractPriceChange={contractHandler} />
@@ -114,7 +116,7 @@ const Create = () => {
         control={control}
         error={errors.title}
         helperText={errors.title?.message?.toString()}
-      ></FormField>
+      />
 
       <Text style={styles.title}>자세한 설명</Text>
       <FormField
@@ -124,7 +126,7 @@ const Create = () => {
         helperText={errors.description?.message?.toString()}
         multiline
         placeholder="현재 집의 상태나 계약 진행 과정을 상세하게 적어주세요."
-      ></FormField>
+      />
 
       <Pressable onPress={handleSubmit(registerPost)}>
         {({ pressed }) => (

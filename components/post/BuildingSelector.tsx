@@ -7,111 +7,118 @@ import {
 } from "@expo/vector-icons";
 import React from "react";
 import { useState } from "react";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { Pressable, View, Text, StyleSheet } from "react-native";
 import { z } from "zod";
 
-type BuildingType = z.infer<typeof buildingTypeSchema>;
+// options
+const buildingOptions = [
+  {
+    type: "OFFICETEL",
+    label: "오피스텔",
+    Icon: FontAwesome,
+    iconName: "building",
+  },
+  {
+    type: "APARTMENT",
+    label: "아파트",
+    Icon: MaterialIcons,
+    iconName: "apartment",
+  },
+  {
+    type: "HOUSE",
+    label: "주택",
+    Icon: FontAwesome6,
+    iconName: "house-chimney",
+  },
+  { type: "VILLA", label: "빌라", Icon: FontAwesome5, iconName: "building" },
+];
 
-type BuildingSelectorProps = {
-  onBuildingTypeChange: (type: BuildingType) => void;
+// type
+type BuildingType = z.infer<typeof buildingTypeSchema>;
+type Props<T extends FieldValues> = {
+  control: Control<T, any>;
+  name: Path<T>;
+  defaultValue: BuildingType;
 };
 
-const BuildingSelector = ({ onBuildingTypeChange }: BuildingSelectorProps) => {
+/**
+ * @description 건물 타입 선택 컴포넌트
+ */
+const BuildingSelector = <T extends FieldValues>({
+  name,
+  control,
+  defaultValue,
+}: Props<T>) => {
   // state
-  const [buildingType, setBuildingType] = useState<BuildingType>("OFFICETEL");
+  const [buildingType, setBuildingType] = useState<BuildingType>(defaultValue);
 
   const handleBuildingType = (type: BuildingType) => {
-    onBuildingTypeChange(type);
     setBuildingType(type);
   };
 
+  // building option을 렌더링하는 함수
+  const renderBuildingOption = (
+    onChange: (value: BuildingType) => void,
+    type: BuildingType,
+    label: string,
+    iconName: string,
+    IconComponent: React.ComponentType<{
+      name: string;
+      size: number;
+      color: string;
+    }>
+  ) => (
+    <Pressable
+      key={type}
+      style={[
+        styles.building_item,
+        buildingType === type && styles.selected_building_item,
+      ]}
+      onPress={() => {
+        handleBuildingType(type);
+        onChange(type);
+      }}
+    >
+      <IconComponent
+        name={iconName}
+        size={24}
+        color={buildingType === type ? "#22c55e" : "#000"}
+      />
+      <Text
+        style={[
+          styles.buttonText,
+          buildingType === type && styles.buttonTextSelected,
+        ]}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+
+  // view
   return (
-    <View style={styles.building_container}>
-      <Pressable
-        style={[
-          styles.building_item,
-          buildingType === "OFFICETEL" && styles.selected_building_item,
-        ]}
-        onPress={() => handleBuildingType("OFFICETEL")}
-      >
-        <FontAwesome
-          name="building"
-          size={24}
-          color={buildingType === "OFFICETEL" ? "#22c55e" : "#000"}
-        />
-        <Text
-          style={[
-            styles.buttonText,
-            buildingType === "OFFICETEL" && styles.buttonTextSelected,
-          ]}
-        >
-          오피스텔
-        </Text>
-      </Pressable>
-      <Pressable
-        style={[
-          styles.building_item,
-          buildingType === "APARTMENT" && styles.selected_building_item,
-        ]}
-        onPress={() => handleBuildingType("APARTMENT")}
-      >
-        <MaterialIcons
-          name="apartment"
-          size={24}
-          color={buildingType === "APARTMENT" ? "#22c55e" : "#000"}
-        />
-        <Text
-          style={[
-            styles.buttonText,
-            buildingType === "APARTMENT" && styles.buttonTextSelected,
-          ]}
-        >
-          아파트
-        </Text>
-      </Pressable>
-      <Pressable
-        style={[
-          styles.building_item,
-          buildingType === "HOUSE" && styles.selected_building_item,
-        ]}
-        onPress={() => handleBuildingType("HOUSE")}
-      >
-        <FontAwesome6
-          name="house-chimney"
-          size={24}
-          color={buildingType === "HOUSE" ? "#22c55e" : "#000"}
-        />
-        <Text
-          style={[
-            styles.buttonText,
-            buildingType === "HOUSE" && styles.buttonTextSelected,
-          ]}
-        >
-          주택
-        </Text>
-      </Pressable>
-      <Pressable
-        style={[
-          styles.building_item,
-          buildingType === "VILLA" && styles.selected_building_item,
-        ]}
-        onPress={() => handleBuildingType("VILLA")}
-      >
-        <FontAwesome5
-          name="building"
-          size={24}
-          color={buildingType === "VILLA" ? "#22c55e" : "#000"}
-        />
-        <Text
-          style={[
-            styles.buttonText,
-            buildingType === "VILLA" && styles.buttonTextSelected,
-          ]}
-        >
-          빌라
-        </Text>
-      </Pressable>
-    </View>
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { onChange } }) => {
+        return (
+          <View style={styles.building_container}>
+            <View style={styles.building_container}>
+              {buildingOptions.map(({ type, label, Icon, iconName }) =>
+                renderBuildingOption(
+                  onChange,
+                  type as BuildingType,
+                  label,
+                  iconName,
+                  Icon
+                )
+              )}
+            </View>
+          </View>
+        );
+      }}
+    />
   );
 };
 
