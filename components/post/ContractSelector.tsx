@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Pressable, View, StyleSheet, Text } from "react-native";
 import UnderlineTextInput from "../common/UnderlineTextInput";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
 type RentType = "DepositRent" | "MonthlyRent" | "MixedRent"; // 전제, 월세, 반전세
 
@@ -22,11 +23,15 @@ const rental = {
   MixedRent: "반전세",
 };
 
-type Props = {
-  onContractPriceChange: (contractPrice: ContractPrice) => void;
+type Props<T extends FieldValues> = {
+  control: Control<T, any>;
+  names: Path<T>[];
 };
 
-const ContractSelector = ({ onContractPriceChange }: Props) => {
+const ContractSelector = <T extends FieldValues>({
+  control,
+  names,
+}: Props<T>) => {
   // state
   const [rentType, setRentType] = React.useState<RentType>("DepositRent");
   const [contractPrice, setContractPrice] =
@@ -42,11 +47,13 @@ const ContractSelector = ({ onContractPriceChange }: Props) => {
   const handlePriceChange = (newPrice: Partial<ContractPrice>) => {
     const updatedContractPrice = { ...contractPrice, ...newPrice };
     setContractPrice(updatedContractPrice);
-    onContractPriceChange(updatedContractPrice);
+    // onContractPriceChange(updatedContractPrice);
   };
 
   // Input Field Component
   const inputField = (
+    control: Control<T, any>,
+    name: Path<T>,
     label: string,
     value: string | undefined,
     key: keyof ContractPrice
@@ -54,10 +61,21 @@ const ContractSelector = ({ onContractPriceChange }: Props) => {
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputInnerContainer}>
-        <UnderlineTextInput
-          placeholder={label}
-          value={value}
-          onChangeText={(text) => handlePriceChange({ [key]: text })}
+        <Controller
+          control={control}
+          name={name}
+          render={({ field: { onChange } }) => {
+            return (
+              <UnderlineTextInput
+                placeholder={label}
+                value={value}
+                onChangeText={(text) => {
+                  handlePriceChange({ [key]: text });
+                  onChange(Number(text));
+                }}
+              />
+            );
+          }}
         />
       </View>
       <Text style={styles.won}>만원</Text>
@@ -90,13 +108,27 @@ const ContractSelector = ({ onContractPriceChange }: Props) => {
       <View style={styles.buttonContainer}>{buttons}</View>
       <View style={styles.innerContainer}>
         {inputField(
+          control,
+          names[0],
           `${rental[rentType]} 보증금`,
           contractPrice.deposit,
           "deposit"
         )}
         {rentType !== "DepositRent" &&
-          inputField("월세", contractPrice.monthlyFee, "monthlyFee")}
-        {inputField("관리비", contractPrice.maintenanceFee, "maintenanceFee")}
+          inputField(
+            control,
+            names[1],
+            "월세",
+            contractPrice.monthlyFee,
+            "monthlyFee"
+          )}
+        {inputField(
+          control,
+          names[2],
+          "관리비",
+          contractPrice.maintenanceFee,
+          "maintenanceFee"
+        )}
       </View>
     </>
   );
