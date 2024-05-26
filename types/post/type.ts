@@ -12,7 +12,7 @@ export interface IPost {
 
 export const contractPriceSchema = z.object({
   deposit: z.number(),
-  monthlyRent: z.number(),
+  monthlyFee: z.number(),
   maintenanceFee: z.number(),
 });
 
