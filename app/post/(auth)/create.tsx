@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, Pressable, ScrollView } from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
 import React from "react";
@@ -42,10 +41,6 @@ const Create = () => {
       },
     },
   });
-
-  console.log("getValues: ", getValues());
-
-  console.log("errors: ", errors);
 
   // 임대차 계약 변경 핸들러
   const contractHandler = (contractPrice: ContractPrice) => {
@@ -93,7 +88,14 @@ const Create = () => {
       />
 
       <Text style={styles.title}>임대차 계약</Text>
-      <ContractSelector onContractPriceChange={contractHandler} />
+      <ContractSelector
+        control={control}
+        names={[
+          "contractInfo.contractPrice.deposit",
+          "contractInfo.contractPrice.monthlyFee",
+          "contractInfo.contractPrice.maintenanceFee",
+        ]}
+      />
 
       <Text style={styles.title}>이미지</Text>
       <ImageSelector control={control} name="imageUuids" />
