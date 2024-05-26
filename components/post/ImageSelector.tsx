@@ -8,6 +8,7 @@ import {
   Image,
   StyleSheet,
   Platform,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import uuid from "react-native-uuid";
@@ -63,9 +64,15 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
 
   // 이미지 삭제
   const removeImage = (uuid: string, onChange: (uuids: string[]) => void) => {
-    const leftImages = images.filter((image) => image.uuid !== uuid);
-    setImages(leftImages);
-    onChange(leftImages.map((image) => image.uuid));
+    axiosPrivate.delete(`/api/images/${uuid}`).then(({ status }) => {
+      if (status === 403) {
+        Alert.alert("권한이 없습니다.");
+      } else {
+        const leftImages = images.filter((image) => image.uuid !== uuid);
+        setImages(leftImages);
+        onChange(leftImages.map((image) => image.uuid));
+      }
+    });
   };
 
   // FormData 생성
