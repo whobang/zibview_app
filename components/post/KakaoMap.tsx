@@ -2,7 +2,11 @@ import React from "react";
 import { StyleSheet, Platform } from "react-native";
 import { WebView } from "react-native-webview";
 
-const KakaoMap = () => {
+type Props = {
+  postId: string;
+};
+
+const KakaoMap = ({ postId }: Props) => {
   return (
     <WebView
       style={styles.map}
@@ -15,7 +19,7 @@ const KakaoMap = () => {
         uri:
           (Platform.OS === "ios"
             ? process.env.EXPO_PUBLIC_IOS_API_URL
-            : process.env.EXPO_PUBLIC_ANDROID_API_URL) + "/map",
+            : process.env.EXPO_PUBLIC_ANDROID_API_URL) + `/map/${postId}`,
       }}
     />
   );
