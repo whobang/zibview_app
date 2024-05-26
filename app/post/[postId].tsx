@@ -26,9 +26,13 @@ interface IPost {
 const Post = () => {
   // hooks
   const axiosPrivate = useAxiosPrivate();
-  const { postId } = useLocalSearchParams();
+  const { postId } = useLocalSearchParams<{ postId: string }>();
   const { auth } = useAuth();
-  console.log("postId", postId);
+
+  if (!postId) {
+    // TODO : 404 페이지로 이동
+    return <Text>포스트를 찾을 수 없습니다.</Text>;
+  }
 
   useEffect(() => {
     fetchPost();
@@ -49,7 +53,7 @@ const Post = () => {
   return (
     <View style={styles.container}>
       <ScrollView nestedScrollEnabled>
-        <KakaoMap />
+        <KakaoMap postId={postId} />
         {/* <ImageSwiper /> */}
         <BuildingInfo />
         <Content />
