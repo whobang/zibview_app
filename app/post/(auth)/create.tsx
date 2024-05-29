@@ -8,9 +8,7 @@ import Residency from "@/components/post/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { AxiosResponse } from "axios";
 import { useRouter } from "expo-router";
-import ContractSelector, {
-  ContractPrice,
-} from "@/components/post/ContractSelector";
+import ContractSelector from "@/components/post/ContractSelector";
 import { IPost, Post, postSchema } from "@/types/post/type";
 import { useForm } from "react-hook-form";
 import FormField from "@/components/common/FormField";
@@ -41,13 +39,7 @@ const Create = () => {
       },
     },
   });
-
-  // 임대차 계약 변경 핸들러
-  const contractHandler = (contractPrice: ContractPrice) => {
-    // setPost((prev) => {
-    //   return { ...prev, contractPrice };
-    // });
-  };
+  console.log("errors: ", JSON.stringify(errors));
 
   // 게시글 등록 API 호출
   const registerPost = async () => {
@@ -94,6 +86,7 @@ const Create = () => {
           "contractInfo.contractPrice.deposit",
           "contractInfo.contractPrice.monthlyFee",
           "contractInfo.contractPrice.maintenanceFee",
+          "contractInfo.contractPrice.rentType",
         ]}
       />
 

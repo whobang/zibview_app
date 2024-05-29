@@ -8,19 +8,8 @@ import * as Location from "expo-location";
 import { LocationObject } from "expo-location";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useAuth0 } from "react-native-auth0";
-
-interface IPost {
-  postId: number;
-  address: string;
-  buildingName: string;
-  imageUrl: string;
-  likeCount: number;
-  commentCount: number;
-  monthlyRent: number;
-  monthlyRentUpdatedAt: Date;
-  annualRent: number;
-  annualRentUpdatedAt: Date;
-}
+import { IPost } from "@/types/post/type";
+import { AxiosResponse } from "axios";
 
 export default function HomeScreen() {
   // state
@@ -34,12 +23,12 @@ export default function HomeScreen() {
   useEffect(() => {
     if (user) {
       handleLocation();
+      fetchPosts(location);
     }
   }, []);
 
   useEffect(() => {
-    if (!location) return;
-    fetchPosts();
+    fetchPosts(location);
   }, [location]);
 
   // 로그인한 사용자의 위치를 저장
@@ -53,6 +42,7 @@ export default function HomeScreen() {
     const location = await Location.getCurrentPositionAsync({});
     setLocation(location);
     saveLocation(location);
+    fetchPosts(location);
   };
 
   // 위치 정보를 서버에 저장
@@ -66,22 +56,36 @@ export default function HomeScreen() {
   };
 
   // 포스트 목록 요청
-  const fetchPosts = async () => {
+  const fetchPosts = async (location: LocationObject | null) => {
+    console.log("fetchPosts", location);
     try {
-      const response = await axios.get("/api/posts");
-      console.log(response.data);
+      const response = await axios.get<string, AxiosResponse<IPost[]>>(
+        "/api/posts",
+        {
+          params: {
+            latitude: location?.coords.latitude,
+            longitude: location?.coords.longitude,
+            maxDistance: 10000000, // 미국 기준
+          },
+        }
+      );
+      console.log("data", response);
+
+      setPosts(response.data);
     } catch (error) {
       console.error(error);
     }
   };
+
+  console.log("posts", posts);
 
   // view
   return (
     <View style={styles.container}>
       <FlatList
         style={styles.innerContainer}
-        data={POSTS}
-        keyExtractor={(post: { postId: string }) => post.postId}
+        data={posts}
+        keyExtractor={(post) => post.postId.toString()}
         renderItem={({ item }) => <Post post={item} />}
       />
     </View>

@@ -6,7 +6,6 @@ const useAxios = () => {
   useEffect(() => {
     const responseIntercept = axios.interceptors.response.use(
       (response) => {
-        console.log("response from axios: ", response);
         return response.data;
       },
       async (error) => {

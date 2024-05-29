@@ -2,8 +2,10 @@ import IconWithCount from "@/components/common/IconWithCount";
 import { IPost } from "@/types/post/type";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-import { Text, Image, View, StyleSheet, Pressable } from "react-native";
+import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Image } from "expo-image";
 import { router } from "expo-router";
+import { format } from "date-fns";
 
 type Props = {
   post: IPost;
@@ -20,8 +22,9 @@ const Post = ({ post }: Props) => {
         <View style={styles.imageContainer}>
           <Image
             style={styles.image}
+            placeholder={require("@/assets/images/no-image.jpg")}
             source={{
-              uri: post.url,
+              uri: post.imageUrl!,
             }}
           />
         </View>
@@ -29,16 +32,29 @@ const Post = ({ post }: Props) => {
           <Text style={styles.address}>{post.address}</Text>
           <Text style={styles.buildingName}>{post.buildingName}</Text>
           <View style={styles.row}>
-            <Text style={styles.rowItem}>월세: 1000/50만원</Text>
-            <Text style={styles.updatedAt}>기준일 2024/01/12</Text>
+            <Text style={styles.rowItem}>
+              월세: {post.monthlyRent.deposit}/{post.monthlyRent.monthlyFee}
+              만원
+            </Text>
+            <Text style={styles.updatedAt}>
+              기준일 {format(post.monthlyRent.lastUpdatedAt, "yyyy/MM/dd")}
+            </Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.rowItem}>전세: 5000만원</Text>
-            <Text style={styles.updatedAt}>기준일 2024/01/12</Text>
+            <Text style={styles.rowItem}>
+              전세: {post.depositRent.deposit}만원
+            </Text>
+            <Text style={styles.updatedAt}>
+              기준일 {format(post.depositRent.lastUpdatedAt, "yyyy/MM/dd")}
+            </Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.rowItem}>반전세: 5000만원</Text>
-            <Text style={styles.updatedAt}>기준일 2024/01/12</Text>
+            <Text style={styles.rowItem}>
+              반전세: {post.mixedRent.deposit}/{post.mixedRent.monthlyFee}만원
+            </Text>
+            <Text style={styles.updatedAt}>
+              기준일 {format(post.mixedRent.lastUpdatedAt, "yyyy/MM/dd")}
+            </Text>
           </View>
 
           <View style={styles.iconContainer}>
@@ -48,7 +64,7 @@ const Post = ({ post }: Props) => {
             />
             <IconWithCount
               icon={<AntDesign name="message1" size={16} color="black" />}
-              count={post.chatCount}
+              count={post.commentCount}
             />
             <Text style={styles.rowItem}>
               별점: <AntDesign name="staro" size={14} color="black" />
@@ -99,7 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   updatedAt: {
-    fontSize: 11,
+    fontSize: 10,
     textDecorationLine: "underline",
     color: "#6b7280",
     textAlign: "right",

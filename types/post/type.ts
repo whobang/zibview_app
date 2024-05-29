@@ -1,16 +1,42 @@
 import { z } from "zod";
+
+// 게시글 목록화면에 사용하는 타입
 export interface IPost {
-  postId: string;
-  url: string;
+  postId: number;
   address: string;
   buildingName: string;
-  lastUpdatedAt: string;
-  chatCount: number;
+  imageUrl: string | undefined | null;
   likeCount: number;
-  lastUpdatedBy: string;
+  commentCount: number;
+  depositRent: IDepositRent;
+  monthlyRent: IMonthlyRent;
+  mixedRent: IMixedRent;
 }
 
+interface IDepositRent {
+  deposit: number;
+  maintenanceFee: number;
+  lastUpdatedAt: Date;
+}
+
+interface IMonthlyRent {
+  deposit: number;
+  monthlyFee: number;
+  maintenanceFee: number;
+  lastUpdatedAt: Date;
+}
+
+interface IMixedRent {
+  deposit: number;
+  monthlyFee: number;
+  maintenanceFee: number;
+  lastUpdatedAt: Date;
+}
+
+export const rentTypeSchema = z.enum(["DEPOSIT", "MONTHLY", "MIXED"]); // 전세, 월세, 반전세
+
 export const contractPriceSchema = z.object({
+  rentType: rentTypeSchema,
   deposit: z.number(),
   monthlyFee: z.number(),
   maintenanceFee: z.number(),
@@ -81,6 +107,7 @@ export const postSchema = z.object({
   imageUuids: z.array(z.string()).optional(),
 });
 
+export type RentType = z.infer<typeof rentTypeSchema>;
 export type AddressState = z.infer<typeof addressSchema>;
 export type BuildingType = z.infer<typeof buildingTypeSchema>;
 export type Post = z.infer<typeof postSchema>;

@@ -14,8 +14,11 @@ import * as ImagePicker from "expo-image-picker";
 import uuid from "react-native-uuid";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import Colors from "@/constants/Colors";
+import { AxiosError } from "axios";
 
 interface ImageType extends ImagePicker.ImagePickerAsset {
+  representation: boolean;
   uuid: string;
 }
 
@@ -48,18 +51,37 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
       return;
     }
 
-    if (!result.canceled) {
-      const newImages = result.assets.map((asset) => {
-        return { ...asset, uuid: uuid.v4() as string };
-      });
-
-      setImages((prevState) => [...prevState, ...newImages]);
-      onChange([
-        ...images.map((image) => image.uuid),
-        ...newImages.map((image) => image.uuid),
-      ]);
-      uploadImage(createFormData(newImages));
+    if (result.canceled) {
+      return;
     }
+
+    const newImages = result.assets.map((asset) => {
+      return {
+        ...asset,
+        uuid: uuid.v4().toString(),
+        representation: false,
+      };
+    });
+
+    // 이미지 업로드
+    axiosPrivate
+      .post("/api/images", createFormData(newImages), {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(() => {
+        setImages((prevState) => [...prevState, ...newImages]);
+        onChange([
+          ...images.map((image) => image.uuid),
+          ...newImages.map((image) => image.uuid),
+        ]);
+      })
+      .catch((error: AxiosError) => {
+        Alert.alert(
+          "이미지 업로드에 실패했습니다. 파일 용량이 너무 큽니다. 최대 5MB까지 업로드 가능합니다."
+        );
+      });
   };
 
   // 이미지 삭제
@@ -97,19 +119,6 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
     return formData;
   };
 
-  // 이미지 업로드
-  const uploadImage = async (formData: FormData) => {
-    axiosPrivate
-      .post("/api/images", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .catch((error) => {
-        console.log("error: ", error);
-      });
-  };
-
   return (
     <Controller
       control={control}
@@ -118,7 +127,10 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
         return (
           <ScrollView
             horizontal
-            contentContainerStyle={{ columnGap: 10, paddingVertical: 5 }}
+            contentContainerStyle={{
+              columnGap: 10,
+              paddingVertical: 5,
+            }}
           >
             <Pressable
               onPress={() => {
@@ -143,10 +155,16 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
               </View>
             </Pressable>
 
-            {images.map((image) => {
+            {images.map((image, index) => {
               return (
                 <View key={image.uuid}>
-                  <Image source={{ uri: image.uri }} style={styles.image} />
+                  <Image
+                    source={{ uri: image.uri }}
+                    style={[styles.image, index === 0 && styles.representative]}
+                  />
+                  {index === 0 && (
+                    <Text style={styles.representativeText}>대표 이미지</Text>
+                  )}
                   <Pressable
                     onPress={() => removeImage(image.uuid, onChange)}
                     style={{
@@ -174,6 +192,23 @@ const styles = StyleSheet.create({
     width: 59,
     height: 59,
     borderRadius: 10,
+  },
+  representative: {
+    borderWidth: 3,
+    borderColor: Colors.primary,
+  },
+  representativeText: {
+    position: "absolute",
+    backgroundColor: Colors.primary,
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
+    width: 59,
+    paddingVertical: 2,
+    bottom: 1,
+    textAlign: "center",
+    borderRadius: 10,
+    overflow: "hidden",
   },
 });
 

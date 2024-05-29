@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Pressable, View, StyleSheet, Text } from "react-native";
 import UnderlineTextInput from "../common/UnderlineTextInput";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-
-type RentType = "DepositRent" | "MonthlyRent" | "MixedRent"; // 전제, 월세, 반전세
+import { RentType, contractInfoSchema, postSchema } from "@/types/post/type";
 
 export type ContractPrice = {
   deposit: string | undefined;
@@ -18,9 +17,9 @@ const defaultValue = {
 };
 
 const rental = {
-  DepositRent: "전세",
-  MonthlyRent: "월세",
-  MixedRent: "반전세",
+  DEPOSIT: "전세",
+  MONTHLY: "월세",
+  MIXED: "반전세",
 };
 
 type Props<T extends FieldValues> = {
@@ -33,7 +32,7 @@ const ContractSelector = <T extends FieldValues>({
   names,
 }: Props<T>) => {
   // state
-  const [rentType, setRentType] = React.useState<RentType>("DepositRent");
+  const [rentType, setRentType] = React.useState<RentType>("DEPOSIT");
   const [contractPrice, setContractPrice] =
     useState<ContractPrice>(defaultValue);
 
@@ -47,7 +46,6 @@ const ContractSelector = <T extends FieldValues>({
   const handlePriceChange = (newPrice: Partial<ContractPrice>) => {
     const updatedContractPrice = { ...contractPrice, ...newPrice };
     setContractPrice(updatedContractPrice);
-    // onContractPriceChange(updatedContractPrice);
   };
 
   // Input Field Component
@@ -85,20 +83,31 @@ const ContractSelector = <T extends FieldValues>({
   // button components
   const buttons = Object.keys(rental).map((key) => {
     return (
-      <Pressable
-        key={key}
-        onPress={() => handleRentType(key as RentType)}
-        style={[styles.button, rentType === key && styles.buttonSelected]}
-      >
-        <Text
-          style={[
-            styles.buttonText,
-            rentType === key && styles.buttonTextSelected,
-          ]}
-        >
-          {rental[key as RentType]}
-        </Text>
-      </Pressable>
+      <Controller
+        control={control}
+        name={names[3]}
+        render={({ field: { onChange } }) => {
+          return (
+            <Pressable
+              key={key}
+              onPress={() => {
+                handleRentType(key as RentType);
+                onChange(key);
+              }}
+              style={[styles.button, rentType === key && styles.buttonSelected]}
+            >
+              <Text
+                style={[
+                  styles.buttonText,
+                  rentType === key && styles.buttonTextSelected,
+                ]}
+              >
+                {rental[key as RentType]}
+              </Text>
+            </Pressable>
+          );
+        }}
+      />
     );
   });
 
@@ -114,7 +123,7 @@ const ContractSelector = <T extends FieldValues>({
           contractPrice.deposit,
           "deposit"
         )}
-        {rentType !== "DepositRent" &&
+        {rentType !== "DEPOSIT" &&
           inputField(
             control,
             names[1],
