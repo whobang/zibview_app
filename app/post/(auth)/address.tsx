@@ -1,9 +1,16 @@
-import { Pressable, View, StyleSheet, Text, Alert } from "react-native";
+import {
+  Pressable,
+  View,
+  StyleSheet,
+  Text,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import { Link } from "expo-router";
 import TextInput from "@/components/common/TextInput";
 import { useRecoilState } from "recoil";
 import { addressState } from "@/atom/addressState";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
 
 /**
@@ -12,9 +19,6 @@ import React from "react";
 const SearchAddress = () => {
   // state
   const [address, setAddress] = useRecoilState(addressState);
-
-  // hooks
-  const router = useRouter();
 
   const toNextPage = () => {
     if (!address.zonecode || !address.address) {
@@ -25,42 +29,39 @@ const SearchAddress = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>주소</Text>
-      <View style={styles.find_button}>
-        <View style={styles.post_code}>
-          <TextInput
-            placeholder="우편번호"
-            editable={false}
-            value={address.zonecode ? address.zonecode.toString() : ""}
-          />
-        </View>
-        <Link href="/address/modal" asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <Text
-                style={[styles.button_outline, { opacity: pressed ? 0.5 : 1 }]}
-              >
-                우편번호 찾기
-              </Text>
-            )}
-          </Pressable>
-        </Link>
+    <View className="h-full p-4">
+      <Text className="font-jregular text-3xl my-2">주소</Text>
+      <View className="flex-row mb-2">
+        <TextInput
+          placeholder="우편번호"
+          containerStyles="flex-1"
+          editable={false}
+          value={address.zonecode ? address.zonecode.toString() : ""}
+        />
+        <TouchableOpacity
+          onPress={() => router.push("/address/modal")}
+          className="justify-center px-4 min-w-[110px] rounded-md bg-primary-200 ml-2"
+        >
+          <Text className="text-white text-center">우편번호 찾기</Text>
+        </TouchableOpacity>
       </View>
 
       <TextInput
+        containerStyles="mb-2"
         placeholder="지번 주소"
         editable={false}
         value={address.jibunAddress || ""}
       />
 
       <TextInput
+        containerStyles="mb-2"
         placeholder="도로명 주소"
         editable={false}
         value={address.roadAddress || ""}
       />
 
       <TextInput
+        containerStyles="mb-2"
         placeholder="상세주소"
         value={address.detailAddress || ""}
         onChangeText={(value) =>
@@ -68,23 +69,12 @@ const SearchAddress = () => {
         }
       />
 
-      <View style={styles.last_container}>
-        <Pressable onPress={toNextPage}>
-          {({ pressed }) => (
-            <Text
-              style={[
-                styles.button,
-                {
-                  backgroundColor: pressed ? "#fff" : "#22c55e",
-                  color: pressed ? "#22c55e" : "#fff",
-                },
-              ]}
-            >
-              건물 선택
-            </Text>
-          )}
-        </Pressable>
-      </View>
+      <TouchableOpacity
+        onPress={toNextPage}
+        className="justify-center px-2 py-4 rounded-md bg-primary-200"
+      >
+        <Text className="text-white text-center">건물 선택</Text>
+      </TouchableOpacity>
     </View>
   );
 };

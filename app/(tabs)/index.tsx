@@ -1,8 +1,12 @@
-import { StyleSheet, View, FlatList, Alert } from "react-native";
-
-import { POSTS } from "./dummies";
+import {
+  Text,
+  FlatList,
+  Alert,
+  View,
+  Image,
+  RefreshControl,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import Post from "@/components/post/Post";
 import { axios } from "@/api/axios";
 import * as Location from "expo-location";
 import { LocationObject } from "expo-location";
@@ -10,26 +14,42 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useAuth0 } from "react-native-auth0";
 import { IPost } from "@/types/post/type";
 import { AxiosResponse } from "axios";
+import useAuth from "@/hooks/useAuth";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { images } from "@/constants";
+import SearchInput from "@/components/SearchInput";
+import Trending from "@/components/Trending";
+import EmptyState from "@/components/EmptyState";
+import { useQuery } from "@tanstack/react-query";
+import Post from "@/components/post/Post";
+import PlusButton from "@/components/PlusButton";
 
 export default function HomeScreen() {
   // state
   const [location, setLocation] = useState<LocationObject | null>(null);
-  const [posts, setPosts] = useState<IPost[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   // hooks
   const { user } = useAuth0();
+  const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
+  const {
+    data: posts,
+    error,
+    isFetching,
+    refetch,
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: () => fetchPosts(location),
+  });
+
+  console.log("posts", posts);
 
   useEffect(() => {
     if (user) {
       handleLocation();
-      fetchPosts(location);
     }
   }, []);
-
-  useEffect(() => {
-    fetchPosts(location);
-  }, [location]);
 
   // 로그인한 사용자의 위치를 저장
   const handleLocation = async () => {
@@ -42,7 +62,6 @@ export default function HomeScreen() {
     const location = await Location.getCurrentPositionAsync({});
     setLocation(location);
     saveLocation(location);
-    fetchPosts(location);
   };
 
   // 위치 정보를 서버에 저장
@@ -57,7 +76,6 @@ export default function HomeScreen() {
 
   // 포스트 목록 요청
   const fetchPosts = async (location: LocationObject | null) => {
-    console.log("fetchPosts", location);
     try {
       const response = await axios.get<string, AxiosResponse<IPost[]>>(
         "/api/posts",
@@ -69,32 +87,49 @@ export default function HomeScreen() {
           },
         }
       );
-      console.log("data", response);
 
-      setPosts(response.data);
+      return response.data;
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
-  console.log("posts", posts);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
+  };
+
+  // if (true) {
+  //   // auth?.needOnboarding
+  //   console.log("auth", auth);
+  //   return <Redirect href="/onboarding" />;
+  // }
 
   // view
   return (
-    <View style={styles.container}>
+    <SafeAreaView className="bg-white h-full">
       <FlatList
-        style={styles.innerContainer}
-        data={posts}
+        data={posts ?? []}
         keyExtractor={(post) => post.postId.toString()}
         renderItem={({ item }) => <Post post={item} />}
+        ListHeaderComponent={() => (
+          <View className="flex-row my-6 px-4 space-y-6 items-center justify-between">
+            <SearchInput />
+            <PlusButton />
+          </View>
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="No Videos Found"
+            subtitle="Be the first one to upload a video"
+          />
+        )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
-    </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  innerContainer: { width: "100%" },
-});

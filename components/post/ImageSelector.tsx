@@ -14,7 +14,6 @@ import * as ImagePicker from "expo-image-picker";
 import uuid from "react-native-uuid";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import Colors from "@/constants/Colors";
 import { AxiosError } from "axios";
 
 interface ImageType extends ImagePicker.ImagePickerAsset {
@@ -195,11 +194,10 @@ const styles = StyleSheet.create({
   },
   representative: {
     borderWidth: 3,
-    borderColor: Colors.primary,
   },
   representativeText: {
     position: "absolute",
-    backgroundColor: Colors.primary,
+
     color: "white",
     fontSize: 10,
     fontWeight: "bold",

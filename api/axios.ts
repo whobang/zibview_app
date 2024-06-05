@@ -8,12 +8,13 @@ const BASE_URL =
 
 export const axios = Axios.create({
   baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     if (!error.response) {
       console.log("error: ", error);

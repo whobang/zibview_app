@@ -1,7 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet } from "react-native";
-
-import { View } from "@/components/Themed";
+import { Platform, StyleSheet, View } from "react-native";
 import Postcode from "@actbase/react-daum-postcode";
 import { useRecoilState } from "recoil";
 import { addressState } from "@/atom/addressState";

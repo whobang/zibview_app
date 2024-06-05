@@ -1,6 +1,11 @@
 import React from "react";
 import { useState } from "react";
-import { TextInput as OriginalTextInput, StyleSheet, View } from "react-native";
+import {
+  TextInput as OriginalTextInput,
+  Platform,
+  StyleSheet,
+  View,
+} from "react-native";
 
 type Props = {
   placeholder?: string;
@@ -10,6 +15,8 @@ type Props = {
   isValid?: boolean;
   multiline?: boolean;
   numberOfLines?: number;
+  containerStyles?: string;
+  textStyles?: string;
 };
 
 const TextInput = ({
@@ -19,6 +26,8 @@ const TextInput = ({
   editable = true,
   multiline,
   numberOfLines,
+  containerStyles,
+  textStyles,
 }: Props) => {
   const [focused, setFocused] = useState(false);
 
@@ -31,40 +40,23 @@ const TextInput = ({
   };
 
   return (
-    <View style={styles.input_container}>
+    <View
+      className={`border border-stone-400 rounded-lg px-2 h-12 justify-center ${containerStyles}`}
+    >
       <OriginalTextInput
         placeholder={placeholder}
+        placeholderTextColor="#9CA3AF"
         value={value}
         onChangeText={onChangeText}
-        style={[
-          styles.input,
-          {
-            borderColor: focused ? "#2563EB" : "#9ca3af",
-            height: multiline ? 150 : 40,
-          },
-        ]}
         onFocus={onFocus}
         onBlur={onBlur}
         editable={editable}
         multiline={multiline}
         numberOfLines={numberOfLines}
+        className={`text-black ${textStyles}`}
       />
     </View>
   );
 };
 
 export default TextInput;
-
-const styles = StyleSheet.create({
-  input_container: {
-    alignItems: "center",
-    columnGap: 10,
-  },
-  input: {
-    width: "100%",
-    marginVertical: 10,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-  },
-});

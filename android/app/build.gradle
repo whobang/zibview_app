@@ -145,6 +145,7 @@ manifestPlaceholders = [auth0Domain: "dev-yqvrvh36brvqbhfs.jp.auth0.com", auth0S
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    // implementation ("com.kakao.maps.open:android:2.9.5")
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";

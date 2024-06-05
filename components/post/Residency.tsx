@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { StyleSheet, Pressable, Text, View, Alert } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  Text,
+  View,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import DatePicker from "react-native-date-picker";
 import { Incubator } from "react-native-ui-lib";
 
@@ -59,25 +66,37 @@ const Residency = <T extends FieldValues>({
   return (
     <>
       <View style={styles.container}>
-        <Pressable
-          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+        <TouchableOpacity
+          className="flex-1 flex-row justify-center items-center rounded-md p-3 bg-primary/90"
           onPress={() => setOpenStart(true)}
         >
-          <Text>{startDate.getFullYear()}년 </Text>
-          <Text>{startDate.getMonth() + 1}월 </Text>
-          <Text>{startDate.getDate()}일</Text>
-        </Pressable>
+          <Text className="text-white font-jregular">
+            {startDate.getFullYear()}년{" "}
+          </Text>
+          <Text className="text-white font-jregular">
+            {startDate.getMonth() + 1}월{" "}
+          </Text>
+          <Text className="text-white font-jregular">
+            {startDate.getDate()}일
+          </Text>
+        </TouchableOpacity>
         <View style={styles.tildeContainer}>
           <Text style={styles.tilde}>~</Text>
         </View>
-        <Pressable
-          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+        <TouchableOpacity
+          className="flex-1 flex-row justify-center items-center rounded-md p-3 bg-primary/90"
           onPress={() => setOpenEnd(true)}
         >
-          <Text>{endDate.getFullYear()}년 </Text>
-          <Text>{endDate.getMonth() + 1}월 </Text>
-          <Text>{endDate.getDate()}일</Text>
-        </Pressable>
+          <Text className="text-white font-jregular">
+            {endDate.getFullYear()}년{" "}
+          </Text>
+          <Text className="text-white font-jregular">
+            {endDate.getMonth() + 1}월{" "}
+          </Text>
+          <Text className="text-white font-jregular">
+            {endDate.getDate()}일
+          </Text>
+        </TouchableOpacity>
 
         <Controller
           control={control}

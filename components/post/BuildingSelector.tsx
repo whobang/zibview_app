@@ -1,37 +1,36 @@
 import { buildingTypeSchema } from "@/types/post/type";
-import {
-  FontAwesome,
-  FontAwesome5,
-  FontAwesome6,
-  MaterialIcons,
-} from "@expo/vector-icons";
 import React from "react";
 import { useState } from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { z } from "zod";
+import { icons } from "@/constants";
 
 // options
 const buildingOptions = [
   {
     type: "OFFICETEL",
     label: "오피스텔",
-    Icon: FontAwesome,
-    iconName: "building",
+    icon: icons.building,
   },
   {
     type: "APARTMENT",
     label: "아파트",
-    Icon: MaterialIcons,
-    iconName: "apartment",
+    icon: icons.building2,
   },
   {
     type: "HOUSE",
     label: "주택",
-    Icon: FontAwesome6,
-    iconName: "house-chimney",
+    icon: icons.house,
   },
-  { type: "VILLA", label: "빌라", Icon: FontAwesome5, iconName: "building" },
+  { type: "VILLA", label: "빌라", icon: icons.villa },
 ];
 
 // type
@@ -57,67 +56,43 @@ const BuildingSelector = <T extends FieldValues>({
     setBuildingType(type);
   };
 
-  // building option을 렌더링하는 함수
-  const renderBuildingOption = (
-    onChange: (value: BuildingType) => void,
-    type: BuildingType,
-    label: string,
-    iconName: string,
-    IconComponent: React.ComponentType<{
-      name: string;
-      size: number;
-      color: string;
-    }>
-  ) => (
-    <Pressable
-      key={type}
-      style={[
-        styles.building_item,
-        buildingType === type && styles.selected_building_item,
-      ]}
-      onPress={() => {
-        handleBuildingType(type);
-        onChange(type);
-      }}
-    >
-      <IconComponent
-        name={iconName}
-        size={24}
-        color={buildingType === type ? "#22c55e" : "#000"}
-      />
-      <Text
-        style={[
-          styles.buttonText,
-          buildingType === type && styles.buttonTextSelected,
-        ]}
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
-
   // view
   return (
     <View style={styles.building_container}>
-      <Controller
-        control={control}
-        name={name}
-        render={({ field: { onChange } }) => {
-          return (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <Controller
+          control={control}
+          name={name}
+          render={({ field: { onChange } }) => (
             <>
-              {buildingOptions.map(({ type, label, Icon, iconName }) =>
-                renderBuildingOption(
-                  onChange,
-                  type as BuildingType,
-                  label,
-                  iconName,
-                  Icon
-                )
-              )}
+              {buildingOptions.map(({ type, label, icon }) => (
+                <TouchableOpacity
+                  key={type}
+                  className="relative justify-evenly items-center bg-primary/80 w-20 h-20 rounded-lg mr-3"
+                  onPress={() => {
+                    handleBuildingType(type as BuildingType);
+                    onChange(type);
+                  }}
+                >
+                  {/* 이미지 선택 체크 표시 */}
+                  {buildingType === type && (
+                    <Image
+                      source={icons.check_green}
+                      className="absolute z-10 top-0 right-0"
+                    />
+                  )}
+                  <View className="bg-white p-2 rounded-full">
+                    <Image source={icon} className="" />
+                  </View>
+                  <Text className="text-white font-jregular text-base">
+                    {label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </>
-          );
-        }}
-      />
+          )}
+        />
+      </ScrollView>
     </View>
   );
 };

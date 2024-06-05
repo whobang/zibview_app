@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import {
   View,
@@ -14,20 +14,48 @@ import IconWithCount from "@/components/common/IconWithCount";
 import TextInput from "@/components/common/TextInput";
 import useAuth from "@/hooks/useAuth";
 import { User } from "@/context/AuthProvider";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { AxiosResponse } from "axios";
 import KakaoMap from "@/components/post/KakaoMap";
+import { ChronoUnit } from "@/types/common/type";
+import { BuildingType } from "@/types/post/type";
+import { axios } from "@/api/axios";
+import BuildingInfo from "@/components/post/BuildingInfo";
 
 interface IPost {
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
+  buildingName: string;
+  address: string;
+  buildingType: BuildingType;
+  subPosts: SubPost[];
+}
+
+interface SubPost {
+  userId: number;
+  userName: string;
+  profileImageUrl: string;
+  residencePeriod: number;
+  residencePeriodUnit: ChronoUnit;
+  createdAt: Date;
+  title: string;
+  description: string;
+  imageUrls: string[];
+  commentCount: number;
+  latestComment: Comment | null;
+}
+
+interface Comment {
+  userId: number;
+  userName: string;
+  profileImageUrl: string;
+  comment: string;
+  createdAt: Date;
 }
 
 const Post = () => {
   // hooks
-  const axiosPrivate = useAxiosPrivate();
   const { postId } = useLocalSearchParams<{ postId: string }>();
   const { auth } = useAuth();
+  const [post, setPost] = useState<IPost>({} as IPost);
 
   if (!postId) {
     // TODO : 404 페이지로 이동
@@ -40,24 +68,21 @@ const Post = () => {
 
   // 포스트 정보 가져오기
   const fetchPost = async () => {
-    try {
-      const response = await axiosPrivate.get<string, AxiosResponse<IPost>>(
-        `/api/posts/${postId}`
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+    const data = await axios.get<string, IPost>(`/api/posts/${postId}`);
+    setPost(data);
+    console.log("data", data);
   };
 
   return (
     <View style={styles.container}>
       <ScrollView nestedScrollEnabled>
         <KakaoMap postId={postId} />
-        {/* <ImageSwiper /> */}
-        <BuildingInfo />
+        <BuildingInfo
+          buildingName={post.buildingName}
+          buildingType={post.buildingType}
+          address={post.address}
+        />
         <Content />
-        {/* <Comment /> */}
         <Content />
         <EmptyComment auth={auth} />
         <Content />
@@ -88,41 +113,6 @@ const ImageSwiper = () => {
           />
         </View>
       </PagerView>
-    </View>
-  );
-};
-
-const BuildingInfo = () => {
-  return (
-    <View style={styles.user_info_container}>
-      <View style={{ flex: 8, justifyContent: "space-evenly", rowGap: 5 }}>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", columnGap: 10 }}
-        >
-          <Text style={{ fontWeight: "bold", fontSize: 15 }}>그린오피스텔</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              columnGap: 5,
-            }}
-          >
-            <AntDesign name="home" size={20} color="black" />
-            <Text style={{ textDecorationLine: "underline", color: "#6b7280" }}>
-              오피스텔
-            </Text>
-          </View>
-        </View>
-        <Text>경기 안양시 동안구 관악대로 342번길 19-12</Text>
-      </View>
-      <View
-        style={{
-          flex: 2,
-          alignItems: "flex-end",
-          justifyContent: "center",
-          rowGap: 5,
-        }}
-      ></View>
     </View>
   );
 };
@@ -312,13 +302,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  user_info_container: {
-    flex: 1,
-    flexDirection: "row",
-    padding: 15,
-    borderBottomWidth: 1,
-    borderColor: "#eaeaea",
-  },
+
   page: {
     alignItems: "flex-start",
   },

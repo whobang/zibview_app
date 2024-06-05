@@ -5,6 +5,7 @@ export interface User {
   accessToken: string;
   email: string | undefined;
   name: string | undefined;
+  needOnboarding: boolean;
 }
 
 export interface Auth {

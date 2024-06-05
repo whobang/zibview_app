@@ -11,7 +11,7 @@ import { useRouter } from "expo-router";
 import ContractSelector from "@/components/post/ContractSelector";
 import { IPost, Post, postSchema } from "@/types/post/type";
 import { useForm } from "react-hook-form";
-import FormField from "@/components/common/FormField";
+import FormField from "@/components/FormField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UTCtoKST } from "@/utils/dateUtils";
 
@@ -39,7 +39,6 @@ const Create = () => {
       },
     },
   });
-  console.log("errors: ", JSON.stringify(errors));
 
   // 게시글 등록 API 호출
   const registerPost = async () => {
