@@ -17,12 +17,12 @@ import {
 import { icons } from "@/constants";
 
 type Props<T extends FieldValues> = {
+  control: Control<T, any>;
   title: string;
-  placeholder?: string;
   name: Path<T>;
+  placeholder?: string;
   error?: FieldError;
   helperText?: string;
-  control: Control<T, any>;
   multiline?: boolean;
   otherStyles?: string;
   keyboardType?: KeyboardTypeOptions;
@@ -44,9 +44,9 @@ const FormField = <T extends FieldValues>({
 
   return (
     <View className={`space-y-2 ${otherStyles}`}>
-      <Text className="text-base text-gray-100 font-pmedium">{title}</Text>
+      <Text className="text-2xl font-jregular">{title}</Text>
       <View
-        className={`border-2 border-black-200 w-full h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row
+        className={`border-2 border-primary-200 w-full h-auto px-4 rounded-2xl focus:border-secondary items-center flex-row
         ${error ? "border-red-500" : ""}`}
       >
         <Controller
@@ -56,7 +56,7 @@ const FormField = <T extends FieldValues>({
             <>
               <TextInput
                 className={`flex-1 text-white font-psemibold text-base ${
-                  multiline ? "h-36" : ""
+                  multiline ? "h-36" : "h-12"
                 }`}
                 value={value}
                 placeholder={placeholder}

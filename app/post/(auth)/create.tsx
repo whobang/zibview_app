@@ -1,4 +1,10 @@
-import { StyleSheet, Text, Pressable, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
 import React from "react";
 import BuildingSelector from "@/components/post/BuildingSelector";
@@ -14,6 +20,7 @@ import { useForm } from "react-hook-form";
 import FormField from "@/components/FormField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UTCtoKST } from "@/utils/dateUtils";
+import CustomButton from "@/components/CustomButtom";
 
 /**
  * @description 게시글 작성 페이지
@@ -60,7 +67,7 @@ const Create = () => {
       nestedScrollEnabled
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>거주 기간</Text>
+      <Text className="text-2xl font-jregular">거주 기간</Text>
       <Residency
         name={[
           "contractInfo.contractStartDate",
@@ -71,14 +78,14 @@ const Create = () => {
         contractEndDate={getValues().contractInfo.contractEndDate}
       />
 
-      <Text style={styles.title}>건물 유형</Text>
+      <Text className="text-2xl font-jregular mt-4">건물 유형</Text>
       <BuildingSelector
         control={control}
         name="buildingType"
         defaultValue={getValues().buildingType}
       />
 
-      <Text style={styles.title}>임대차 계약</Text>
+      <Text className="text-2xl font-jregular mt-2">임대차 계약</Text>
       <ContractSelector
         control={control}
         names={[
@@ -89,43 +96,31 @@ const Create = () => {
         ]}
       />
 
-      <Text style={styles.title}>이미지</Text>
+      <Text className="text-2xl font-jregular mt-4">이미지</Text>
       <ImageSelector control={control} name="imageUuids" />
 
-      <Text style={styles.title}>제목</Text>
       <FormField
+        title="제목"
         name="title"
         control={control}
         error={errors.title}
         placeholder="제목을 적어주세요."
         helperText={errors.title?.message?.toString()}
+        otherStyles="my-4"
       />
 
-      <Text style={styles.title}>자세한 설명</Text>
       <FormField
+        title="자세한 설명"
         name="description"
         control={control}
         error={errors.description}
         helperText={errors.description?.message?.toString()}
         multiline
         placeholder="현재 집의 상태나 계약 진행 과정을 상세하게 적어주세요."
+        otherStyles="mb-4"
       />
 
-      <Pressable onPress={handleSubmit(registerPost)}>
-        {({ pressed }) => (
-          <Text
-            style={[
-              styles.button,
-              {
-                backgroundColor: pressed ? "#fff" : "#22c55e",
-                color: pressed ? "#22c55e" : "#fff",
-              },
-            ]}
-          >
-            등록
-          </Text>
-        )}
-      </Pressable>
+      <CustomButton title="등록" onPress={handleSubmit(registerPost)} />
     </ScrollView>
   );
 };

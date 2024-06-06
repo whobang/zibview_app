@@ -67,7 +67,7 @@ const Residency = <T extends FieldValues>({
     <>
       <View style={styles.container}>
         <TouchableOpacity
-          className="flex-1 flex-row justify-center items-center rounded-md p-3 bg-primary/90"
+          className="flex-1 flex-row justify-center items-center rounded-md p-3 bg-primary"
           onPress={() => setOpenStart(true)}
         >
           <Text className="text-white font-jregular">
@@ -84,7 +84,7 @@ const Residency = <T extends FieldValues>({
           <Text style={styles.tilde}>~</Text>
         </View>
         <TouchableOpacity
-          className="flex-1 flex-row justify-center items-center rounded-md p-3 bg-primary/90"
+          className="flex-1 flex-row justify-center items-center rounded-md p-3 bg-primary"
           onPress={() => setOpenEnd(true)}
         >
           <Text className="text-white font-jregular">

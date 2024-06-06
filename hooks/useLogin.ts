@@ -1,11 +1,27 @@
 import { axios } from "@/api/axios";
-import { router } from "expo-router";
 import { useEffect } from "react";
-import { Alert, Platform } from "react-native";
-import { useAuth0 } from "react-native-auth0";
+import { Alert } from "react-native";
+import { User, useAuth0 } from "react-native-auth0";
+import useAuth from "./useAuth";
+import { AxiosResponse } from "axios";
+
+interface LoginResponse {
+  givenName: string;
+  familyName: string;
+  needOnboarding: boolean;
+  nickname: string;
+  name: string;
+  picture: string;
+  locale: string;
+  updatedAt: Date;
+  email: string;
+  emailVerified: boolean;
+  sub: string;
+}
 
 const useLogin = () => {
   const { user, authorize, getCredentials, error, clearSession } = useAuth0();
+  const { setAuth } = useAuth();
 
   console.log(axios.defaults.baseURL);
 
@@ -20,18 +36,26 @@ const useLogin = () => {
       );
     } catch (e) {
       console.log(e);
+      Alert.alert("로그인에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   const loginRequest = async () => {
     const credentials = await getCredentials();
     await axios
-      .post("/api/login", user, {
+      .post<User | null, AxiosResponse<LoginResponse>>("/api/login", user, {
         headers: {
           Authorization: `Bearer ${credentials?.accessToken}`,
         },
       })
-      .then((res) => console.log("res", res))
+      .then((res) => {
+        setAuth({
+          accessToken: credentials!.accessToken,
+          email: user?.email,
+          name: user?.name,
+          needOnboarding: res.data.needOnboarding,
+        });
+      })
       .catch((e) => {
         console.error("e", e.response.data);
         Alert.alert("로그인에 실패했습니다. 다시 시도해주세요.");

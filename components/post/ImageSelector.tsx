@@ -77,9 +77,11 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
         ]);
       })
       .catch((error: AxiosError) => {
-        Alert.alert(
-          "이미지 업로드에 실패했습니다. 파일 용량이 너무 큽니다. 최대 5MB까지 업로드 가능합니다."
-        );
+        if (error.response?.status !== 500) {
+          Alert.alert(
+            "이미지 업로드에 실패했습니다. 파일 용량이 너무 큽니다. 최대 5MB까지 업로드 가능합니다."
+          );
+        }
       });
   };
 
@@ -136,17 +138,7 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
                 addImage(onChange);
               }}
             >
-              <View
-                style={{
-                  borderWidth: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 60,
-                  height: 60,
-                  borderRadius: 10,
-                  borderColor: "#6b7280",
-                }}
-              >
+              <View className="border-2 justify-center items-center w-16 h-16 rounded-lg border-primary">
                 <AntDesign name="camera" size={25} color="#6b7280" />
                 <Text>
                   <Text style={{ color: "#f87171" }}>{images.length}</Text>/10
@@ -159,10 +151,14 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
                 <View key={image.uuid}>
                   <Image
                     source={{ uri: image.uri }}
-                    style={[styles.image, index === 0 && styles.representative]}
+                    className="w-16 h-16 rounded-lg border-2 border-primary"
                   />
                   {index === 0 && (
-                    <Text style={styles.representativeText}>대표 이미지</Text>
+                    <View className="absolute bottom-0 rounded-full w-full bg-primary">
+                      <Text className="text-xs text-center  text-white font-jregular">
+                        대표 이미지
+                      </Text>
+                    </View>
                   )}
                   <Pressable
                     onPress={() => removeImage(image.uuid, onChange)}
@@ -185,30 +181,6 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
 };
 
 export default ImageSelector;
-
-const styles = StyleSheet.create({
-  image: {
-    width: 59,
-    height: 59,
-    borderRadius: 10,
-  },
-  representative: {
-    borderWidth: 3,
-  },
-  representativeText: {
-    position: "absolute",
-
-    color: "white",
-    fontSize: 10,
-    fontWeight: "bold",
-    width: 59,
-    paddingVertical: 2,
-    bottom: 1,
-    textAlign: "center",
-    borderRadius: 10,
-    overflow: "hidden",
-  },
-});
 
 const CloseIcon = () => {
   return (

@@ -2,14 +2,7 @@ import { buildingTypeSchema } from "@/types/post/type";
 import React from "react";
 import { useState } from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { icons } from "@/constants";
 
@@ -58,7 +51,7 @@ const BuildingSelector = <T extends FieldValues>({
 
   // view
   return (
-    <View style={styles.building_container}>
+    <View className="flex-row justify-between my-3">
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <Controller
           control={control}
@@ -68,7 +61,7 @@ const BuildingSelector = <T extends FieldValues>({
               {buildingOptions.map(({ type, label, icon }) => (
                 <TouchableOpacity
                   key={type}
-                  className="relative justify-evenly items-center bg-primary/80 w-20 h-20 rounded-lg mr-3"
+                  className="relative justify-evenly items-center bg-primary w-20 h-20 rounded-lg mr-3"
                   onPress={() => {
                     handleBuildingType(type as BuildingType);
                     onChange(type);
@@ -98,42 +91,3 @@ const BuildingSelector = <T extends FieldValues>({
 };
 
 export default BuildingSelector;
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  building_container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 10,
-  },
-  building_item: {
-    width: "20%",
-    rowGap: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
-    borderRadius: 15,
-    borderWidth: 2,
-    opacity: 0.4,
-  },
-  selected_building_item: {
-    borderColor: "#22c55e",
-    opacity: 1,
-    borderWidth: 2,
-    transform: [{ translateY: -2 }],
-  },
-  selectedBuildingText: {
-    color: "#22c55e",
-  },
-  buttonTextSelected: {
-    color: "#22c55e",
-  },
-  buttonText: {
-    color: "#000",
-    textAlign: "center",
-  },
-});

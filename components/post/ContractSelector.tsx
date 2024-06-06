@@ -57,7 +57,9 @@ const ContractSelector = <T extends FieldValues>({
     key: keyof ContractPrice
   ) => (
     <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label} className="font-jregular text-base">
+        {label}
+      </Text>
       <View style={styles.inputInnerContainer}>
         <Controller
           control={control}
@@ -76,7 +78,9 @@ const ContractSelector = <T extends FieldValues>({
           }}
         />
       </View>
-      <Text style={styles.won}>만원</Text>
+      <Text style={styles.won} className="font-jregular text-base">
+        만원
+      </Text>
     </View>
   );
 
@@ -94,13 +98,14 @@ const ContractSelector = <T extends FieldValues>({
                 handleRentType(key as RentType);
                 onChange(key);
               }}
-              style={[styles.button, rentType === key && styles.buttonSelected]}
+              className={`w-1/3 p-2 border-2 border-b-0 border-primary rounded-t-lg ${
+                rentType === key ? "bg-primary" : ""
+              }`}
             >
               <Text
-                style={[
-                  styles.buttonText,
-                  rentType === key && styles.buttonTextSelected,
-                ]}
+                className={`text-center text-base font-jregular ${
+                  rentType === key ? "text-white" : ""
+                }`}
               >
                 {rental[key as RentType]}
               </Text>
@@ -115,7 +120,7 @@ const ContractSelector = <T extends FieldValues>({
   return (
     <>
       <View style={styles.buttonContainer}>{buttons}</View>
-      <View style={styles.innerContainer}>
+      <View style={styles.innerContainer} className="border-2 border-primary">
         {inputField(
           control,
           names[0],
@@ -147,8 +152,6 @@ export default ContractSelector;
 
 const styles = StyleSheet.create({
   innerContainer: {
-    borderWidth: 2,
-    borderColor: "#22c55e",
     paddingVertical: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,

@@ -42,7 +42,9 @@ const SearchAddress = () => {
           onPress={() => router.push("/address/modal")}
           className="justify-center px-4 min-w-[110px] rounded-md bg-primary-200 ml-2"
         >
-          <Text className="text-white text-center">우편번호 찾기</Text>
+          <Text className="text-white text-center font-jregular">
+            우편번호 찾기
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -73,7 +75,7 @@ const SearchAddress = () => {
         onPress={toNextPage}
         className="justify-center px-2 py-4 rounded-md bg-primary-200"
       >
-        <Text className="text-white text-center">건물 선택</Text>
+        <Text className="text-white text-center font-jregular">건물 선택</Text>
       </TouchableOpacity>
     </View>
   );
