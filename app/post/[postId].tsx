@@ -19,6 +19,7 @@ import { ChronoUnit } from "@/types/common/type";
 import { BuildingType } from "@/types/post/type";
 import { axios } from "@/api/axios";
 import BuildingInfo from "@/components/post/BuildingInfo";
+import { AxiosResponse } from "axios";
 
 interface IPost {
   latitude: number;
@@ -68,15 +69,17 @@ const Post = () => {
 
   // 포스트 정보 가져오기
   const fetchPost = async () => {
-    const data = await axios.get<string, IPost>(`/api/posts/${postId}`);
-    setPost(data);
-    console.log("data", data);
+    const data = await axios.get<string, AxiosResponse<IPost>>(
+      `/api/posts/${postId}`
+    );
+    setPost(data.data);
+    console.log("data", data.data);
   };
 
   return (
     <View style={styles.container}>
       <ScrollView nestedScrollEnabled>
-        <KakaoMap postId={postId} />
+        <KakaoMap latitude={post.latitude} longitude={post.longitude} />
         <BuildingInfo
           buildingName={post.buildingName}
           buildingType={post.buildingType}

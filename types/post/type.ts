@@ -1,3 +1,4 @@
+import { icons } from "@/constants";
 import { z } from "zod";
 
 // 게시글 목록화면에 사용하는 타입
@@ -112,3 +113,22 @@ export type RentType = z.infer<typeof rentTypeSchema>;
 export type AddressState = z.infer<typeof addressSchema>;
 export type BuildingType = z.infer<typeof buildingTypeSchema>;
 export type Post = z.infer<typeof postSchema>;
+
+export const buildingOptions = [
+  {
+    type: "OFFICETEL",
+    label: "오피스텔",
+    icon: icons.building,
+  },
+  {
+    type: "APARTMENT",
+    label: "아파트",
+    icon: icons.building2,
+  },
+  {
+    type: "HOUSE",
+    label: "주택",
+    icon: icons.house,
+  },
+  { type: "VILLA", label: "빌라", icon: icons.villa },
+];

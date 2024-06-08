@@ -1,7 +1,7 @@
-import { BuildingType } from "@/types/post/type";
-import { AntDesign } from "@expo/vector-icons";
+import { BuildingType, buildingOptions } from "@/types/post/type";
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
+import Text from "@/components/Text";
 
 type Props = {
   buildingName: string;
@@ -10,27 +10,28 @@ type Props = {
 };
 
 const BuildingInfo = ({ buildingName, buildingType, address }: Props) => {
+  const buildingOption =
+    buildingOptions.find((option) => option.type === buildingType) ||
+    buildingOptions[0];
+
   return (
     <View style={styles.user_info_container}>
       <View style={{ flex: 8, justifyContent: "space-evenly", rowGap: 5 }}>
         <View
           style={{ flexDirection: "row", alignItems: "center", columnGap: 10 }}
         >
-          {buildingName && (
-            <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-              그린오피스텔
-            </Text>
-          )}
+          {buildingName && <Text textStyle="text-2xl">{buildingName}</Text>}
           <View
             style={{
               flexDirection: "row",
+              justifyContent: "center",
               alignItems: "center",
               columnGap: 5,
             }}
           >
-            <AntDesign name="home" size={20} color="black" />
-            <Text style={{ textDecorationLine: "underline", color: "#6b7280" }}>
-              오피스텔
+            <Image source={buildingOption.icon} />
+            <Text textStyle="underline text-primary">
+              {buildingOption.label}
             </Text>
           </View>
         </View>

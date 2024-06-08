@@ -1,30 +1,10 @@
-import { buildingTypeSchema } from "@/types/post/type";
+import { buildingOptions, buildingTypeSchema } from "@/types/post/type";
 import React from "react";
 import { useState } from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { icons } from "@/constants";
-
-// options
-const buildingOptions = [
-  {
-    type: "OFFICETEL",
-    label: "오피스텔",
-    icon: icons.building,
-  },
-  {
-    type: "APARTMENT",
-    label: "아파트",
-    icon: icons.building2,
-  },
-  {
-    type: "HOUSE",
-    label: "주택",
-    icon: icons.house,
-  },
-  { type: "VILLA", label: "빌라", icon: icons.villa },
-];
 
 // type
 type BuildingType = z.infer<typeof buildingTypeSchema>;
