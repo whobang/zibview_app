@@ -55,7 +55,7 @@ const FormField = <T extends FieldValues>({
           render={({ field: { onChange, onBlur, value } }) => (
             <>
               <TextInput
-                className={`flex-1 text-white font-psemibold text-base ${
+                className={`flex-1 font-psemibold text-base ${
                   multiline ? "h-36" : "h-12"
                 }`}
                 value={value}

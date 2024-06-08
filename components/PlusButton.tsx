@@ -5,7 +5,7 @@ import { router } from "expo-router";
 
 const PlusButton = () => {
   return (
-    <TouchableOpacity onPress={() => router.push("/post/address")}>
+    <TouchableOpacity onPress={() => router.replace("/post/address")}>
       <View className="w-14 h-14 bg-primary-100  rounded-full items-center justify-center">
         <Image source={icons.plus} className="w-6 h-6" />
       </View>
