@@ -16,13 +16,12 @@ import { IPost } from "@/types/post/type";
 import { AxiosResponse } from "axios";
 import useAuth from "@/hooks/useAuth";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { images } from "@/constants";
 import SearchInput from "@/components/SearchInput";
-import Trending from "@/components/Trending";
 import EmptyState from "@/components/EmptyState";
 import { useQuery } from "@tanstack/react-query";
 import Post from "@/components/post/Post";
 import PlusButton from "@/components/PlusButton";
+import { Page } from "@/types/common/type";
 
 export default function HomeScreen() {
   // state
@@ -77,18 +76,11 @@ export default function HomeScreen() {
   // 포스트 목록 요청
   const fetchPosts = async (location: LocationObject | null) => {
     try {
-      const response = await axios.get<string, AxiosResponse<IPost[]>>(
-        "/api/posts",
-        {
-          params: {
-            latitude: location?.coords.latitude,
-            longitude: location?.coords.longitude,
-            maxDistance: 10000000, // 미국 기준
-          },
-        }
+      const response = await axios.get<string, AxiosResponse<Page<IPost>>>(
+        "/api/posts?page=0&size=10&sort=updatedAt,desc",
       );
 
-      return response.data;
+      return response.data.content;
     } catch (error) {
       console.error(error);
       throw error;
@@ -111,6 +103,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView className="bg-white h-full">
       <FlatList
+      
         data={posts ?? []}
         keyExtractor={(post) => post.postId.toString()}
         renderItem={({ item }) => <Post post={item} />}
@@ -124,6 +117,7 @@ export default function HomeScreen() {
           <EmptyState
             title="No Videos Found"
             subtitle="Be the first one to upload a video"
+            buttonTitle="Upload Video"
           />
         )}
         refreshControl={

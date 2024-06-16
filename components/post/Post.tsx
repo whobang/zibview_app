@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { format } from "date-fns";
+import NoImage from "../NoImage";
 
 type Props = {
   post: IPost;
@@ -31,20 +32,22 @@ const Post = ({ post }: Props) => {
     <Pressable onPress={pressHandler}>
       <View className="mx-4 mb-14">
         <View className="w-full h-60 relative justify-center items-center">
-          <Image
+          {imageUrl ? (<Image
             className="w-full h-full rounded-xl"
             resizeMode="cover"
             source={{
-              uri: imageUrl || "",
+              uri: imageUrl,
             }}
-          />
+          />): (<NoImage />)}
+          
         </View>
         <View className="flex-1 gap-1 items-start py-2 px-1">
           <Text className="font-jregular text-2xl">{post.address}</Text>
           {post.buildingName && (
             <Text style={styles.buildingName}>{post.buildingName}</Text>
           )}
-          <View style={styles.row}>
+          {post.monthlyRent && (
+            <View style={styles.row}>
             <Text style={styles.rowItem} numberOfLines={1}>
               <Text className="text-lg font-jregular">월세:</Text>{" "}
               <Text className="font-pbold text-primary-100 text-xl">
@@ -56,7 +59,9 @@ const Post = ({ post }: Props) => {
               기준일 {format(post.monthlyRent.lastUpdatedAt, "yyyy/MM/dd")}
             </Text>
           </View>
-          <View style={styles.row}>
+          )}
+          {post.depositRent && (
+            <View style={styles.row}>
             <Text style={styles.rowItem} numberOfLines={1}>
               <Text className="text-lg font-jregular">전세:</Text>{" "}
               <Text className="font-pbold text-primary-100 text-xl">
@@ -68,7 +73,9 @@ const Post = ({ post }: Props) => {
               기준일 {format(post.depositRent.lastUpdatedAt, "yyyy/MM/dd")}
             </Text>
           </View>
-          <View style={styles.row}>
+          )}
+          {post.mixedRent && (
+            <View style={styles.row}>
             <Text style={styles.rowItem} numberOfLines={1}>
               <Text className="text-lg font-jregular">반전세:</Text>{" "}
               <Text className="font-pbold text-primary-100 text-xl">
@@ -80,6 +87,8 @@ const Post = ({ post }: Props) => {
               기준일 {format(post.mixedRent.lastUpdatedAt, "yyyy/MM/dd")}
             </Text>
           </View>
+          )}
+          
 
           <View style={styles.iconContainer}>
             <IconWithCount

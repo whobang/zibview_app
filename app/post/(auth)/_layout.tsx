@@ -1,6 +1,6 @@
 import HomeButton from "@/components/HomeButton";
 import useProtectRoute from "@/hooks/useProtectRoute";
-import { Redirect, Slot, Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import React from "react";
 
 const PostLayout = () => {

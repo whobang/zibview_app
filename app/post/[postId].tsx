@@ -14,12 +14,13 @@ import IconWithCount from "@/components/common/IconWithCount";
 import TextInput from "@/components/common/TextInput";
 import useAuth from "@/hooks/useAuth";
 import { User } from "@/context/AuthProvider";
-import KakaoMap from "@/components/post/KakaoMap";
+import Map from "@/components/Map";
 import { ChronoUnit } from "@/types/common/type";
 import { BuildingType } from "@/types/post/type";
 import { axios } from "@/api/axios";
 import BuildingInfo from "@/components/post/BuildingInfo";
 import { AxiosResponse } from "axios";
+import EmptyState from "@/components/EmptyState";
 
 interface IPost {
   latitude: number;
@@ -79,17 +80,32 @@ const Post = () => {
   return (
     <View style={styles.container}>
       <ScrollView nestedScrollEnabled>
-        <KakaoMap latitude={post.latitude} longitude={post.longitude} />
+        <Map
+          address={post.address}
+          latitude={post.latitude}
+          longitude={post.longitude}
+        />
         <BuildingInfo
           buildingName={post.buildingName}
           buildingType={post.buildingType}
           address={post.address}
         />
-        <Content />
-        <Content />
-        <EmptyComment auth={auth} />
-        <Content />
-        <Content />
+        {post.subPosts ? (
+          <EmptyState
+            title="등록된 게시글이 없습니다."
+            subtitle="첫 번째 게시글을 등록하세요."
+            buttonTitle="게시글 작성"
+            containerStyles="mb-6"
+          />
+        ) : (
+          <>
+            <Content />
+            <Content />
+            <EmptyComment auth={auth} />
+            <Content />
+            <Content />
+          </>
+        )}
       </ScrollView>
     </View>
   );
@@ -304,6 +320,7 @@ export default Post;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
   },
 
   page: {

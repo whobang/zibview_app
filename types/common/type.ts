@@ -8,3 +8,12 @@ export enum ChronoUnit {
   YEARS = "YEARS",
   // 필요에 따라 추가
 }
+
+export interface Page<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  first: boolean;
+  empty: boolean;
+}
