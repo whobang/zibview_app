@@ -111,30 +111,30 @@ const Post = () => {
   );
 };
 
-const ImageSwiper = () => {
-  return (
-    <View style={styles.emptyBox}>
-      <PagerView style={styles.container} initialPage={0}>
-        <View style={styles.page} key="1">
-          <Image
-            style={styles.image}
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
-            }}
-          />
-        </View>
-        <View style={styles.page} key="2">
-          <Image
-            style={styles.image}
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
-            }}
-          />
-        </View>
-      </PagerView>
-    </View>
-  );
-};
+// const ImageSwiper = () => {
+//   return (
+//     <View style={styles.emptyBox}>
+//       <PagerView style={styles.container} initialPage={0}>
+//         <View style={styles.page} key="1">
+//           <Image
+//             style={styles.image}
+//             source={{
+//               uri: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
+//             }}
+//           />
+//         </View>
+//         <View style={styles.page} key="2">
+//           <Image
+//             style={styles.image}
+//             source={{
+//               uri: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
+//             }}
+//           />
+//         </View>
+//       </PagerView>
+//     </View>
+//   );
+// };
 
 const Content = () => {
   return (
