@@ -49,7 +49,7 @@ const Post = ({ post }: Props) => {
           <View className="gap-1 items-start py-2 px-1">
             <Text className="font-jregular text-2xl">{post.address}</Text>
             {post.buildingName && (
-              <Text style={styles.buildingName}>{post.buildingName}</Text>
+              <Text className="font-jregular text-lg">{post.buildingName}</Text>
             )}
             {post.monthlyRent && (
               <View style={styles.row}>

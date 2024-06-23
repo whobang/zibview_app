@@ -4,12 +4,14 @@ import { images } from "@/constants";
 import CustomButton from "./CustomButtom";
 import { router } from "expo-router";
 import Text from "@/components/Text";
+import { ExpoRouter } from "expo-router/types/expo-router";
 
 type Props = {
   title: string;
   subtitle: string;
   buttonTitle: string;
   containerStyles?: string;
+  href: ExpoRouter.Href
 };
 
 const EmptyState = ({
@@ -17,6 +19,7 @@ const EmptyState = ({
   subtitle,
   buttonTitle,
   containerStyles,
+  href
 }: Props) => {
   return (
     <View className={`justify-center items-center px-4 ${containerStyles}`}>
@@ -31,7 +34,7 @@ const EmptyState = ({
       <Text textStyle="text-sm text-primary-200">{subtitle}</Text>
       <CustomButton
         title={buttonTitle}
-        onPress={() => router.push("post/(auth)/address")}
+        onPress={() => router.push(href)}
         containerStyles="w-full my-4"
       />
     </View>

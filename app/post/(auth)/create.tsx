@@ -1,20 +1,14 @@
 import {
   StyleSheet,
   Text,
-  Pressable,
   ScrollView,
-  TouchableOpacity,
 } from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
 import React from "react";
-import BuildingSelector from "@/components/post/BuildingSelector";
-import { addressState } from "@/atom/addressState";
-import { useRecoilValue } from "recoil";
 import Residency from "@/components/post/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { AxiosResponse } from "axios";
-import { useRouter } from "expo-router";
-import ContractSelector from "@/components/post/ContractSelector";
+import { router, useLocalSearchParams } from "expo-router";
 import { IPost, Post, postSchema } from "@/types/post/type";
 import { useForm } from "react-hook-form";
 import FormField from "@/components/FormField";
@@ -27,9 +21,9 @@ import CustomButton from "@/components/CustomButtom";
  */
 const Create = () => {
   // hooks
-  const router = useRouter();
+  const {postId, address} = useLocalSearchParams<{ postId: string, address: string }>();
+  console.log("postId: ", postId, "address: ", address)
   const axiosPrivate = useAxiosPrivate();
-  const address = useRecoilValue(addressState);
   const {
     handleSubmit,
     formState: { errors },
@@ -38,8 +32,6 @@ const Create = () => {
   } = useForm<Post>({
     resolver: zodResolver(postSchema),
     defaultValues: {
-      buildingType: "OFFICETEL",
-      address: address,
       contractInfo: {
         contractStartDate: UTCtoKST(new Date()),
         contractEndDate: UTCtoKST(new Date()),
@@ -50,10 +42,12 @@ const Create = () => {
   // 게시글 등록 API 호출
   const registerPost = async () => {
     await axiosPrivate
-      .post<Post, AxiosResponse<IPost>>("/api/posts", getValues())
+      .post<Post, AxiosResponse<{subPostId : {subPostId: number}}>>("/api/posts/sub-post", {
+        postId: postId,
+        ...getValues()
+      })
       .then(({ data, status }) => {
-        console.log();
-        router.replace(`/post/${data.postId}`);
+        router.replace(`/post/${postId}`);
       })
       .catch((e) => {
         console.log("error: ", e);
@@ -67,6 +61,8 @@ const Create = () => {
       nestedScrollEnabled
       showsVerticalScrollIndicator={false}
     >
+      <Text className="text-2xl font-jregular mb-4" numberOfLines={1}>주소 : {address}</Text>
+
       <Text className="text-2xl font-jregular">거주 기간</Text>
       <Residency
         name={[
@@ -76,24 +72,6 @@ const Create = () => {
         control={control}
         contractStartDate={getValues().contractInfo.contractStartDate}
         contractEndDate={getValues().contractInfo.contractEndDate}
-      />
-
-      <Text className="text-2xl font-jregular mt-4">건물 유형</Text>
-      <BuildingSelector
-        control={control}
-        name="buildingType"
-        defaultValue={getValues().buildingType}
-      />
-
-      <Text className="text-2xl font-jregular mt-2">임대차 계약</Text>
-      <ContractSelector
-        control={control}
-        names={[
-          "contractInfo.contractPrice.deposit",
-          "contractInfo.contractPrice.monthlyFee",
-          "contractInfo.contractPrice.maintenanceFee",
-          "contractInfo.contractPrice.rentType",
-        ]}
       />
 
       <Text className="text-2xl font-jregular mt-4">이미지</Text>

@@ -4,19 +4,15 @@ import { styled } from "nativewind";
 
 type Props = {
   children: React.ReactNode;
-  textStyle?: TextProps["style"];
+  textStyle?: string;
 };
 
 const Text = ({ children, textStyle }: Props) => {
   return (
-    <RNText className="font-jregular" style={textStyle}>
+    <RNText className={`font-jregular ${textStyle}`}>
       {children}
     </RNText>
   );
 };
 
-export default styled(Text, {
-  props: {
-    textStyle: true,
-  },
-});
+export default Text;

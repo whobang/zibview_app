@@ -7,7 +7,7 @@ const PostLayout = () => {
   const shouldLogin = useProtectRoute();
 
   if (shouldLogin) {
-    return <Redirect href="/sign-in" />;
+    return <Redirect href="/profile" />;
   }
 
   return (

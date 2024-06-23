@@ -98,11 +98,9 @@ export const buildingTypeSchema = z.enum([
 
 export const postSchema = z.object({
   contractInfo: contractInfoSchema,
-  address: addressSchema,
-  buildingType: buildingTypeSchema,
   title: z
     .string({ required_error: "제목을 입력해주세요." })
-    .max(200, "200자 이내로 입력해주세요."),
+    .max(100, "100자 이내로 입력해주세요."),
   description: z
     .string({ required_error: "설명을 입력해주세요." })
     .max(1000, "1000자 이내로 입력해주세요."),

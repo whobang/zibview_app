@@ -21,6 +21,7 @@ import { axios } from "@/api/axios";
 import BuildingInfo from "@/components/post/BuildingInfo";
 import { AxiosResponse } from "axios";
 import EmptyState from "@/components/EmptyState";
+import Content from "@/components/post/Content";
 
 interface IPost {
   latitude: number;
@@ -31,12 +32,9 @@ interface IPost {
   subPosts: SubPost[];
 }
 
-interface SubPost {
+export interface SubPost {
+  subPostId: number;
   userId: number;
-  userName: string;
-  profileImageUrl: string;
-  residencePeriod: number;
-  residencePeriodUnit: ChronoUnit;
   createdAt: Date;
   title: string;
   description: string;
@@ -74,8 +72,9 @@ const Post = () => {
       `/api/posts/${postId}`
     );
     setPost(data.data);
-    console.log("data", data.data);
   };
+
+  console.log("post.subPosts: ", post.subPosts)
 
   return (
     <View style={styles.container}>
@@ -90,21 +89,16 @@ const Post = () => {
           buildingType={post.buildingType}
           address={post.address}
         />
-        {post.subPosts ? (
-          <EmptyState
-            title="등록된 게시글이 없습니다."
-            subtitle="첫 번째 게시글을 등록하세요."
-            buttonTitle="게시글 작성"
-            containerStyles="mb-6"
-          />
+        {(post.subPosts && post.subPosts.length > 0) ? (
+            post.subPosts.map((subPost) => <Content key={subPost.subPostId} subPost={subPost} />)
         ) : (
-          <>
-            <Content />
-            <Content />
-            <EmptyComment auth={auth} />
-            <Content />
-            <Content />
-          </>
+          <EmptyState
+          title="등록된 게시글이 없습니다."
+          subtitle="첫 번째 게시글을 등록하세요."
+          buttonTitle="게시글 작성"
+          containerStyles="mb-6"
+          href={`/post/create?postId=${postId}&address=${post.address}`}
+        />
         )}
       </ScrollView>
     </View>
@@ -135,87 +129,6 @@ const Post = () => {
 //     </View>
 //   );
 // };
-
-const Content = () => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        width: "auto",
-        marginHorizontal: 15,
-        paddingVertical: 15,
-        borderColor: "#eaeaea",
-        borderBottomWidth: 1,
-      }}
-    >
-      <View style={{ flexDirection: "row", marginBottom: 5 }}>
-        <Image
-          style={styles.profile_image}
-          source={{
-            uri: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
-          }}
-        />
-        <View style={{ flex: 1, justifyContent: "space-evenly" }}>
-          <View
-            style={{
-              flexDirection: "row",
-              columnGap: 5,
-            }}
-          >
-            <Text style={{ fontSize: 15, fontWeight: "bold" }}>sarakim</Text>
-            <AntDesign name="checkcircleo" size={18} />
-          </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text>거주 기간: 1년</Text>
-            <Text style={{ marginBottom: 3, color: "#6b7280" }}>
-              2024년 1월 23일
-            </Text>
-          </View>
-        </View>
-      </View>
-      <FlatList
-        style={{ marginVertical: 10 }}
-        horizontal
-        data={[
-          {
-            id: 1,
-            url: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
-          },
-          {
-            id: 2,
-            url: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
-          },
-          {
-            id: 3,
-            url: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
-          },
-        ]}
-        renderItem={({ item }) => (
-          <Image
-            style={{
-              height: 100,
-              width: 100,
-              borderRadius: 3,
-              marginRight: 5,
-            }}
-            source={{ uri: item.url }}
-          />
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
-      <Text style={{ fontWeight: "bold", fontSize: 22, marginBottom: 12 }}>
-        오늘 첫 입주했습니다.
-      </Text>
-      <Text style={{ fontSize: 16 }}>
-        3개월간 머물 예정이며, 더 많은 정보를 원하시면 문의주세요. 집 주인은
-        친절하고, 깨끗한 집입니다. 부동산은 어디어디 부동산입니다.
-      </Text>
-      <Comment />
-    </View>
-  );
-};
 
 const Comment = () => {
   return (
@@ -321,6 +234,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingBottom: 40,
   },
 
   page: {

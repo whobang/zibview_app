@@ -10,6 +10,8 @@ type Props = {
 };
 
 const Map = ({ address, latitude, longitude }: Props) => {
+  if (!latitude || !longitude) return null;
+
   return (
     <View className="w-full h-[350]">
       {Platform.OS === "ios" ? (
