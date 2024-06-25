@@ -9,6 +9,9 @@ import { AuthProvider } from "@/context/AuthProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Auth0Provider } from "react-native-auth0";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Text from "@/components/Text";
+import CustomButton from "@/components/CustomButtom";
+import { TouchableOpacity } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -64,9 +67,17 @@ export default function RootLayout() {
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
                 <Stack.Screen
-                  name="post/(auth)"
+                  name="post"
                   options={{
-                    headerShown: false,
+                    headerTitle: "",
+                    headerRight: () => (
+                      <TouchableOpacity
+                        className="border border-primary rounded-lg p-2"
+                        onPress={() => {}}
+                      >
+                        <Text textStyle="text-primary">글쓰기</Text>
+                      </TouchableOpacity>
+                    ),
                   }}
                 />
                 <Stack.Screen

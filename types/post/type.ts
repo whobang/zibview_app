@@ -6,8 +6,8 @@ export interface IPost {
   postId: number;
   address: string;
   buildingName: string;
-  imageUrl: string | undefined | null;
-  imageUrn: string | undefined | null;
+  imageUrl: Array<string>;
+  imageUrn: Array<string>;
   likeCount: number;
   commentCount: number;
   depositRent: IDepositRent;
