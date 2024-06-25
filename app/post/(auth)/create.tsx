@@ -1,8 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Text, ScrollView } from "react-native";
 import ImageSelector from "@/components/post/ImageSelector";
 import React from "react";
 import Residency from "@/components/post/Residency";
@@ -21,8 +17,10 @@ import CustomButton from "@/components/CustomButtom";
  */
 const Create = () => {
   // hooks
-  const {postId, address} = useLocalSearchParams<{ postId: string, address: string }>();
-  console.log("postId: ", postId, "address: ", address)
+  const { postId, address } = useLocalSearchParams<{
+    postId: string;
+    address: string;
+  }>();
   const axiosPrivate = useAxiosPrivate();
   const {
     handleSubmit,
@@ -42,10 +40,13 @@ const Create = () => {
   // 게시글 등록 API 호출
   const registerPost = async () => {
     await axiosPrivate
-      .post<Post, AxiosResponse<{subPostId : {subPostId: number}}>>("/api/posts/sub-post", {
-        postId: postId,
-        ...getValues()
-      })
+      .post<Post, AxiosResponse<{ subPostId: { subPostId: number } }>>(
+        "/api/posts/sub-post",
+        {
+          postId: postId,
+          ...getValues(),
+        }
+      )
       .then(({ data, status }) => {
         router.replace(`/post/${postId}`);
       })
@@ -61,7 +62,9 @@ const Create = () => {
       nestedScrollEnabled
       showsVerticalScrollIndicator={false}
     >
-      <Text className="text-2xl font-jregular mb-4" numberOfLines={1}>주소 : {address}</Text>
+      <Text className="text-2xl font-jregular mb-4" numberOfLines={1}>
+        주소 : {address}
+      </Text>
 
       <Text className="text-2xl font-jregular">거주 기간</Text>
       <Residency

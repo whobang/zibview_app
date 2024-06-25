@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import uuid from "react-native-uuid";
@@ -29,12 +30,15 @@ type Props<T extends FieldValues> = {
 const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
   // state
   const [images, setImages] = useState<ImageType[]>([]);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   // hooks
   const axiosPrivate = useAxiosPrivate();
 
   // 이미지 추가
   const addImage = async (onChange: (value: string[]) => void) => {
+    setIsImageUploading(true);
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
@@ -51,6 +55,7 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
     }
 
     if (result.canceled) {
+      setIsImageUploading(false);
       return;
     }
 
@@ -83,6 +88,8 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
           );
         }
       });
+
+    setIsImageUploading(false);
   };
 
   // 이미지 삭제
@@ -173,6 +180,7 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
                 </View>
               );
             })}
+            {isImageUploading && <ActivityIndicator color="#FF9C01" />}
           </ScrollView>
         );
       }}
