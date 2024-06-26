@@ -1,12 +1,4 @@
-import {
-  Pressable,
-  View,
-  StyleSheet,
-  Text,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
-import { Link } from "expo-router";
+import { View, StyleSheet, Text, Alert, TouchableOpacity } from "react-native";
 import TextInput from "@/components/common/TextInput";
 import { useRecoilState } from "recoil";
 import { addressState } from "@/atom/addressState";

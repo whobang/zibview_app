@@ -4,7 +4,7 @@ import React from "react";
 import Residency from "@/components/post/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { AxiosResponse } from "axios";
-import { router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { IPost, Post, postSchema } from "@/types/post/type";
 import { useForm } from "react-hook-form";
 import FormField from "@/components/FormField";
@@ -47,8 +47,8 @@ const Create = () => {
           ...getValues(),
         }
       )
-      .then(({ data, status }) => {
-        router.replace(`/post/${postId}`);
+      .then(() => {
+        router.navigate(`/post/${postId}`);
       })
       .catch((e) => {
         console.log("error: ", e);

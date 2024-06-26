@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-} from "react-native";
-import PagerView from "react-native-pager-view";
+import { Stack, router, useLocalSearchParams } from "expo-router";
+import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import Text from "@/components/Text";
 import { AntDesign } from "@expo/vector-icons";
 import IconWithCount from "@/components/common/IconWithCount";
 import TextInput from "@/components/common/TextInput";
 import useAuth from "@/hooks/useAuth";
 import { User } from "@/context/AuthProvider";
 import Map from "@/components/Map";
-import { ChronoUnit } from "@/types/common/type";
 import { BuildingType } from "@/types/post/type";
 import { axios } from "@/api/axios";
 import BuildingInfo from "@/components/post/BuildingInfo";
 import { AxiosResponse } from "axios";
 import EmptyState from "@/components/EmptyState";
 import Content from "@/components/post/Content";
+import HomeButton from "@/components/HomeButton";
+import BackButton from "@/components/BackButton";
 
 interface IPost {
   latitude: number;
@@ -74,61 +68,57 @@ const Post = () => {
     setPost(data.data);
   };
 
-  console.log("post.subPosts: ", post.subPosts)
-
   return (
-    <View style={styles.container}>
-      <ScrollView nestedScrollEnabled>
-        <Map
-          address={post.address}
-          latitude={post.latitude}
-          longitude={post.longitude}
-        />
-        <BuildingInfo
-          buildingName={post.buildingName}
-          buildingType={post.buildingType}
-          address={post.address}
-        />
-        {(post.subPosts && post.subPosts.length > 0) ? (
-            post.subPosts.map((subPost) => <Content key={subPost.subPostId} subPost={subPost} />)
-        ) : (
-          <EmptyState
-          title="등록된 게시글이 없습니다."
-          subtitle="첫 번째 게시글을 등록하세요."
-          buttonTitle="게시글 작성"
-          containerStyles="mb-6"
-          href={`/post/create?postId=${postId}&address=${post.address}`}
-        />
-        )}
-      </ScrollView>
-    </View>
+    <>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitle: "",
+          headerLeft: () => <BackButton />,
+          headerRight: () => (
+            <TouchableOpacity
+              className="border border-primary rounded-lg p-2"
+              onPress={() =>
+                router.push(
+                  `/post/create?postId=${postId}&address=${post.address}`
+                )
+              }
+            >
+              <Text textStyle="text-primary">글쓰기</Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <View style={styles.container}>
+        <ScrollView nestedScrollEnabled>
+          <Map
+            address={post.address}
+            latitude={post.latitude}
+            longitude={post.longitude}
+          />
+          <BuildingInfo
+            buildingName={post.buildingName}
+            buildingType={post.buildingType}
+            address={post.address}
+          />
+          {post.subPosts && post.subPosts.length > 0 ? (
+            post.subPosts.map((subPost) => (
+              <Content key={subPost.subPostId} subPost={subPost} />
+            ))
+          ) : (
+            <EmptyState
+              title="등록된 게시글이 없습니다."
+              subtitle="첫 번째 게시글을 등록하세요."
+              buttonTitle="게시글 작성"
+              containerStyles="mb-6"
+              href={`/post/create?postId=${postId}&address=${post.address}`}
+            />
+          )}
+        </ScrollView>
+      </View>
+    </>
   );
 };
-
-// const ImageSwiper = () => {
-//   return (
-//     <View style={styles.emptyBox}>
-//       <PagerView style={styles.container} initialPage={0}>
-//         <View style={styles.page} key="1">
-//           <Image
-//             style={styles.image}
-//             source={{
-//               uri: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
-//             }}
-//           />
-//         </View>
-//         <View style={styles.page} key="2">
-//           <Image
-//             style={styles.image}
-//             source={{
-//               uri: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-908900502706966329/original/6ea37971-9948-4334-8c00-120c2fb013db.jpeg",
-//             }}
-//           />
-//         </View>
-//       </PagerView>
-//     </View>
-//   );
-// };
 
 const Comment = () => {
   return (

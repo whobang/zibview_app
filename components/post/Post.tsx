@@ -13,14 +13,7 @@ import {
 import { router } from "expo-router";
 import NoImage from "../NoImage";
 import PagerView from "react-native-pager-view";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  useDerivedValue,
-  interpolate,
-  Extrapolate,
-  Extrapolation,
-} from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 import ImagePagination from "../ImagePagination";
 
 type Props = {
@@ -28,9 +21,8 @@ type Props = {
 };
 
 const Post = ({ post }: Props) => {
-  // state
+  // hooks
   const [isSwiping, setIsSwiping] = useState(false);
-
   const scrollOffset = useSharedValue(0);
 
   const onPageScroll = (e: {
@@ -42,7 +34,7 @@ const Post = ({ post }: Props) => {
 
   const pressHandler = () => {
     if (isSwiping) return;
-    router.navigate(`/post/${post.postId}`);
+    router.push(`/post/${post.postId}`);
   };
 
   const baseUrl = Platform.select({
@@ -50,7 +42,10 @@ const Post = ({ post }: Props) => {
     android: process.env.EXPO_PUBLIC_ANDROID_API_URL,
   });
 
-  const imageUrls = post.imageUrl.map((url) => `${baseUrl}${url}`);
+  const imageUrls =
+    Platform.OS === "ios"
+      ? post.imageUrl
+      : post.imageUrn.map((urn) => `${baseUrl}${urn}`);
 
   return (
     <View className="mx-4 mb-8">

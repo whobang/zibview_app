@@ -84,7 +84,7 @@ const ImageSelector = <T extends FieldValues>({ control, name }: Props<T>) => {
       .catch((error: AxiosError) => {
         if (error.response?.status !== 500) {
           Alert.alert(
-            "이미지 업로드에 실패했습니다. 파일 용량이 너무 큽니다. 최대 5MB까지 업로드 가능합니다."
+            "이미지 업로드에 실패했습니다. 파일 용량이 너무 큽니다. 파일 당 10MB, 최대 5MB까지 업로드 가능합니다."
           );
         }
       });
