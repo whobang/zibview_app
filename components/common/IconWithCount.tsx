@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
+import Text from "@/components/Text";
 
 const IconWithCount = ({
   icon,
@@ -9,14 +10,9 @@ const IconWithCount = ({
   count: number;
 }) => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-      }}
-    >
-      <Text style={{ marginRight: 2 }}>{icon}</Text>
-      <Text>{count}</Text>
+    <View className="flex-row justify-center items-center">
+      <Text textStyle="mr-0.5">{icon}</Text>
+      <Text textStyle="mr-2">{count}</Text>
     </View>
   );
 };

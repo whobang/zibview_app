@@ -7,8 +7,9 @@ import {
   View,
   StyleSheet,
   Pressable,
-  Image,
   Platform,
+  Image,
+  FlatList,
 } from "react-native";
 import { router } from "expo-router";
 import NoImage from "../NoImage";
@@ -64,6 +65,8 @@ const Post = ({ post }: Props) => {
                 {imageUrls.map((url, index) => (
                   <View key={index}>
                     <Image
+                      // lazy load
+
                       className="w-full h-full rounded-xl"
                       resizeMode="cover"
                       source={{

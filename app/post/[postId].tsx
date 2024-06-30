@@ -5,7 +5,6 @@ import Text from "@/components/Text";
 import { AntDesign } from "@expo/vector-icons";
 import IconWithCount from "@/components/common/IconWithCount";
 import TextInput from "@/components/common/TextInput";
-import useAuth from "@/hooks/useAuth";
 import { User } from "@/context/AuthProvider";
 import Map from "@/components/Map";
 import { BuildingType } from "@/types/post/type";
@@ -14,8 +13,9 @@ import BuildingInfo from "@/components/post/BuildingInfo";
 import { AxiosResponse } from "axios";
 import EmptyState from "@/components/EmptyState";
 import Content from "@/components/post/Content";
-import HomeButton from "@/components/HomeButton";
 import BackButton from "@/components/BackButton";
+import { useAuth0 } from "react-native-auth0";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 interface IPost {
   latitude: number;
@@ -28,19 +28,19 @@ interface IPost {
 
 export interface SubPost {
   subPostId: number;
-  userId: number;
   createdAt: Date;
   title: string;
   description: string;
   imageUrls: string[];
+  liked: boolean;
+  likeCount: number;
+  disliked: boolean;
+  dislikeCount: number;
   commentCount: number;
   latestComment: Comment | null;
 }
 
 interface Comment {
-  userId: number;
-  userName: string;
-  profileImageUrl: string;
   comment: string;
   createdAt: Date;
 }
@@ -48,8 +48,11 @@ interface Comment {
 const Post = () => {
   // hooks
   const { postId } = useLocalSearchParams<{ postId: string }>();
-  const { auth } = useAuth();
+  const { user } = useAuth0();
+  const axiosPrivate = useAxiosPrivate();
   const [post, setPost] = useState<IPost>({} as IPost);
+
+  const allAxios = user ? axiosPrivate : axios;
 
   if (!postId) {
     // TODO : 404 페이지로 이동
@@ -62,9 +65,10 @@ const Post = () => {
 
   // 포스트 정보 가져오기
   const fetchPost = async () => {
-    const data = await axios.get<string, AxiosResponse<IPost>>(
+    const data = await allAxios.get<string, AxiosResponse<IPost>>(
       `/api/posts/${postId}`
     );
+    console.log(data.data);
     setPost(data.data);
   };
 
