@@ -11,6 +11,7 @@ import {
 
 import { icons } from "../constants";
 import React from "react";
+import Text from "./Text";
 
 type Props = {
   initialQuery?: string;
@@ -21,17 +22,25 @@ const SearchInput = ({ initialQuery }: Props) => {
   const [query, setQuery] = useState(initialQuery || "");
 
   return (
-    <View className="w-5/6 flex-row items-center space-x-4 h-14 px-4 rounded-full shadow-md border bg-white border-primary">
-      <Image source={icons.search} className="w-6 h-6" resizeMode="contain" />
-      <TextInput
+    <TouchableOpacity
+      className="w-5/6"
+      onPress={() => router.push("/search/modal")}
+    >
+      <View className="flex-row items-center space-x-4 h-14 px-4 rounded-full shadow-md border bg-white border-primary">
+        <Image source={icons.search} className="w-6 h-6" resizeMode="contain" />
+        <Text textStyle="text-base mt-0.5 flex-1 font-pregular text-gray-500 pl-2">
+          주소 또는 건물명으로 검색
+        </Text>
+
+        {/* <TextInput
         className="text-base mt-0.5 flex-1 font-pregular"
         value={query}
         placeholder="주소 또는 건물명으로 검색"
         placeholderTextColor={"#9CA3AF"}
         onChangeText={(e) => setQuery(e)}
-      />
+      /> */}
 
-      <TouchableOpacity
+        {/* <TouchableOpacity
         onPress={() => {
           if (query === "")
             return Alert.alert(
@@ -42,8 +51,9 @@ const SearchInput = ({ initialQuery }: Props) => {
           if (pathname.startsWith("/search")) router.setParams({ query });
           else router.push(`/search/${query}`);
         }}
-      ></TouchableOpacity>
-    </View>
+      ></TouchableOpacity> */}
+      </View>
+    </TouchableOpacity>
   );
 };
 

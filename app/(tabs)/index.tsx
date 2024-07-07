@@ -5,7 +5,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { axios } from "@/api/axios";
 import { useAuth0 } from "react-native-auth0";
 import { IPost } from "@/types/post/type";
@@ -19,13 +19,13 @@ import { Page } from "@/types/common/type";
 import NoImage from "@/components/NoImage";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 
-const  HomeScreen = () => {
+const HomeScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   // 포스트 목록 요청
   const fetchPosts = async (pageParam: number) => {
     const response = await axios.get<string, AxiosResponse<Page<IPost>>>(
-      `/api/posts?page=${pageParam}&size=10&sort=id,desc`
+      `/api/posts?page=${pageParam}`
     );
     return response.data;
   };
@@ -34,17 +34,27 @@ const  HomeScreen = () => {
   const { user } = useAuth0();
   const { auth } = useAuth();
   const queryClient = useQueryClient();
-  const {data, refetch, error, fetchNextPage, hasNextPage, isLoading, isFetching, isFetchingNextPage } = useInfiniteQuery({
+  const {
+    data,
+    refetch,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    isFetching,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["posts"],
-    queryFn: ({pageParam}) => fetchPosts(pageParam),
+    queryFn: ({ pageParam }) => fetchPosts(pageParam),
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => !lastPage.last ? lastPage.pageable.pageNumber + 1 : undefined,
-  })
+    getNextPageParam: (lastPage) =>
+      !lastPage.last ? lastPage.pageable.pageNumber + 1 : undefined,
+  });
 
   const onRefresh = async () => {
     setRefreshing(true);
-    queryClient.invalidateQueries({ queryKey: ["posts"] })
-    refetch({cancelRefetch: false});
+    queryClient.invalidateQueries({ queryKey: ["posts"] });
+    refetch({ cancelRefetch: false });
     setRefreshing(false);
   };
 
@@ -72,7 +82,7 @@ const  HomeScreen = () => {
       <FlatList
         data={posts}
         keyExtractor={(post) => post.postId.toString()}
-        renderItem={({item}) => <Post post={item} />}
+        renderItem={({ item }) => <Post post={item} />}
         onEndReached={onEndReached}
         onEndReachedThreshold={3}
         ListHeaderComponent={() => (
@@ -81,11 +91,17 @@ const  HomeScreen = () => {
             <PlusButton />
           </View>
         )}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        ListFooterComponent={() => (isLoading || isFetchingNextPage) && <ActivityIndicator size="large" color="#FF9C01" />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        ListFooterComponent={() =>
+          (isLoading || isFetchingNextPage) && (
+            <ActivityIndicator size="large" color="#FF9C01" />
+          )
+        }
       />
     </SafeAreaView>
   );
-}
+};
 
 export default HomeScreen;
