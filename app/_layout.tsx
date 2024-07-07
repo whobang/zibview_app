@@ -68,6 +68,10 @@ export default function RootLayout() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
+                  name="post/(modal)/comment-modal"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
                   name="post/[postId]"
                   options={{
                     headerShown: false,

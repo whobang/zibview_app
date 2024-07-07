@@ -8,6 +8,7 @@ import uuid from "react-native-uuid";
 import { ThumbsDown, ThumbsUp } from "lucide-react-native";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useAuth0 } from "react-native-auth0";
+import { router } from "expo-router";
 
 type Props = {
   subPost: SubPost;
@@ -144,11 +145,15 @@ const Content = ({ subPost }: Props) => {
             />
           </TouchableOpacity>
         </View>
-        <View>
-          <Text textStyle="text-blue-500 underline">
-            댓글 {subPost.commentCount}개
-          </Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => router.push("/post/(modal)/comment-modal")}
+        >
+          <View>
+            <Text textStyle="text-blue-500 underline">
+              댓글 {subPost.commentCount}개
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

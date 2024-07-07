@@ -10,9 +10,9 @@ const IconWithCount = ({
   count: number;
 }) => {
   return (
-    <View className="flex-row justify-center items-center">
-      <Text textStyle="mr-0.5">{icon}</Text>
-      <Text textStyle="mr-2">{count}</Text>
+    <View className="flex flex-row justify-center items-center">
+      {icon}
+      <Text textStyle="mx-1">{count}</Text>
     </View>
   );
 };

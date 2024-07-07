@@ -16,6 +16,7 @@ import NoImage from "../NoImage";
 import PagerView from "react-native-pager-view";
 import { useSharedValue } from "react-native-reanimated";
 import ImagePagination from "../ImagePagination";
+import { Eye, MessageSquareMore, ThumbsUp } from "lucide-react-native";
 
 type Props = {
   post: IPost;
@@ -90,18 +91,26 @@ const Post = ({ post }: Props) => {
           {post.buildingName && (
             <Text className="font-jregular text-lg">{post.buildingName}</Text>
           )}
-          <View style={styles.iconContainer}>
-            <IconWithCount
-              icon={<AntDesign name="like2" size={16} color="black" />}
-              count={post.likeCount}
-            />
-            <IconWithCount
-              icon={<AntDesign name="message1" size={16} color="black" />}
-              count={post.commentCount}
-            />
-            <Text className="flex-1">
-              <AntDesign name="staro" size={16} color="black" /> 5.0
-            </Text>
+          <View className="flex-row justify-between items-center w-full">
+            <View style={styles.iconContainer}>
+              <IconWithCount
+                icon={<ThumbsUp color="#FF9C01" size={18} />}
+                count={post.likeCount}
+              />
+              <IconWithCount
+                icon={<MessageSquareMore color="#FF9C01" size={19} />}
+                count={post.commentCount}
+              />
+              <IconWithCount
+                icon={<Eye color="#FF9C01" size={20} />}
+                count={post.commentCount}
+              />
+            </View>
+            <View className="pr-5">
+              <Text className="font-jregular text-sm text-gray-500">
+                3시간 전
+              </Text>
+            </View>
           </View>
         </View>
       </Pressable>
