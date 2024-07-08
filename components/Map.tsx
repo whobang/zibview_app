@@ -15,7 +15,7 @@ const Map = ({ address, latitude, longitude }: Props) => {
   return (
     <View className="w-full h-[350]">
       {Platform.OS === "ios" ? (
-        <IOS_MAP address={address} latitude={latitude} longitude={longitude} />
+        <IosMap address={address} latitude={latitude} longitude={longitude} />
       ) : (
         <AndroidMap
           address={address}
@@ -29,7 +29,7 @@ const Map = ({ address, latitude, longitude }: Props) => {
 
 export default Map;
 
-const IOS_MAP = ({ address, latitude, longitude }: Props) => {
+const IosMap = ({ address, latitude, longitude }: Props) => {
   return (
     <MapView
       loadingEnabled
@@ -38,8 +38,8 @@ const IOS_MAP = ({ address, latitude, longitude }: Props) => {
       region={{
         latitude: latitude,
         longitude: longitude,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
       }}
     >
       <Marker

@@ -1,15 +1,17 @@
 import { View, Image, TextInput, ScrollView } from "react-native";
+import uuid from "react-native-uuid";
 import React, { useState } from "react";
 import { icons } from "@/constants";
 import Text from "@/components/Text";
+import { AxiosResponse } from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { axios } from "@/api/axios";
-import { AxiosResponse } from "axios";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MapPin } from "lucide-react-native";
+import { router } from "expo-router";
 
 interface IPost {
-  postId: number;
+  id: number;
   address: string;
   buildingName: string;
 }
@@ -50,7 +52,8 @@ const SearchModal = () => {
       <ScrollView>
         {data.map((post) => (
           <TouchableOpacity
-            key={post.postId}
+            key={uuid.v4().toString()}
+            onPress={() => router.replace(`/post/${post.id}`)}
             className="h-16 border-b-gray-500"
           >
             <View className="flex-row items-center">

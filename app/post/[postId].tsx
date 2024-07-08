@@ -68,7 +68,6 @@ const Post = () => {
     const data = await allAxios.get<string, AxiosResponse<IPost>>(
       `/api/posts/${postId}`
     );
-    console.log(data.data);
     setPost(data.data);
   };
 
@@ -83,7 +82,7 @@ const Post = () => {
             <TouchableOpacity
               className="border border-primary rounded-lg p-2"
               onPress={() =>
-                router.push(
+                router.replace(
                   `/post/create?postId=${postId}&address=${post.address}`
                 )
               }

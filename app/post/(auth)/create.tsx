@@ -48,7 +48,7 @@ const Create = () => {
         }
       )
       .then(() => {
-        router.navigate(`/post/${postId}`);
+        router.replace(`/post/${postId}`);
       })
       .catch((e) => {
         console.log("error: ", e);
