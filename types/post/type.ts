@@ -2,17 +2,16 @@ import { icons } from "@/constants";
 import { z } from "zod";
 
 // 게시글 목록화면에 사용하는 타입
-export interface IPost {
+export interface IPostListResponse {
   postId: number;
-  address: string;
+  roadNameAddress: string;
+  jibunAddress: string;
   buildingName: string;
+  sigunguBuildingName: string;
   imageUrl: Array<string>;
   imageUrn: Array<string>;
   likeCount: number;
   commentCount: number;
-  depositRent: IDepositRent;
-  monthlyRent: IMonthlyRent;
-  mixedRent: IMixedRent;
 }
 
 interface IDepositRent {

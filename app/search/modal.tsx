@@ -1,6 +1,5 @@
 import { View, Image, TextInput, ScrollView } from "react-native";
-import uuid from "react-native-uuid";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { icons } from "@/constants";
 import Text from "@/components/Text";
 import { AxiosResponse } from "axios";
@@ -9,6 +8,8 @@ import { axios } from "@/api/axios";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MapPin } from "lucide-react-native";
 import { router } from "expo-router";
+import RenderHtml from 'react-native-render-html';
+import { useWindowDimensions } from 'react-native';
 
 interface IPost {
   id: number;
@@ -16,26 +17,51 @@ interface IPost {
   buildingName: string;
 }
 
+interface IAddressDocument {
+    postId: number;
+    roadNameAddress: string;
+    jibunAddress: string;
+    buildingName: string;
+    sigunguBuildingName: string;
+}
+
 const SearchModal = () => {
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
 
   const { data } = useQuery({
     initialData: [],
-    queryKey: ["search", query],
+    queryKey: ["search", debouncedQuery],    
     queryFn: () => searchAsYouType(query),
+    enabled: !!debouncedQuery, // Ensure query is not run with an empty string    
   });
 
-  const searchAsYouType = async (query: string) => {
+  const searchAsYouType = useCallback(async (query: string) => {
     try {
-      const response: AxiosResponse<IPost[]> = await axios.get(
-        `/api/posts/search-as-you-type?query=${query}`
+      const response: AxiosResponse<IAddressDocument[]> = await axios.get(
+        `/api/es/match-phrase-prefix?query=${query}`
       );
       return response.data;
     } catch (error) {
       console.error(error);
       throw new Error("Failed to fetch data");
     }
-  };
+  }, []);
+
+  // Effect to handle debouncing
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300); // 300 milliseconds delay
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query]);
+  const { width } = useWindowDimensions();
+
+  // Memoize the data to avoid unnecessary re-renders
+  const searchData = useMemo(() => data, [data]);
 
   return (
     <View className="mt-4 mx-5">
@@ -50,18 +76,21 @@ const SearchModal = () => {
         />
       </View>
       <ScrollView>
-        {data.map((post) => (
+        {searchData.map((post) => (
           <TouchableOpacity
-            key={uuid.v4().toString()}
-            onPress={() => router.replace(`/post/${post.id}`)}
+            key={post.postId}
+            onPress={() => router.replace(`/post/${post.postId}`)}
             className="h-16 border-b-gray-500"
           >
-            <View className="flex-row items-center">
-              <View className="w-12 h-12 bg-gray-300/70 rounded-lg mr-4 justify-center items-center">
+            <View className="flex-row items-center w-full">
+              <View className="w-12 h-12 bg-gray-300/70 rounded-lg mr-2 justify-center items-center">
                 <MapPin color="#FF9C01" />
               </View>
-              <View>
-                <Text textStyle="text-base text-gray-700">{post.address}</Text>
+              <View className="flex-1">
+                <RenderHtml
+                  contentWidth={width}
+                  source={{ html: post.roadNameAddress }}
+                />
                 <Text textStyle="text-sm text-gray-600 font-pregular">
                   {post.buildingName}
                 </Text>

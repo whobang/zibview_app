@@ -1,6 +1,5 @@
 import IconWithCount from "@/components/common/IconWithCount";
-import { IPost } from "@/types/post/type";
-import { AntDesign } from "@expo/vector-icons";
+import { IPostListResponse } from "@/types/post/type";
 import React, { memo, useState } from "react";
 import {
   Text,
@@ -9,7 +8,6 @@ import {
   Pressable,
   Platform,
   Image,
-  FlatList,
 } from "react-native";
 import { router } from "expo-router";
 import NoImage from "../NoImage";
@@ -19,7 +17,7 @@ import ImagePagination from "../ImagePagination";
 import { Eye, MessageSquareMore, ThumbsUp } from "lucide-react-native";
 
 type Props = {
-  post: IPost;
+  post: IPostListResponse;
 };
 
 const Post = ({ post }: Props) => {
@@ -30,6 +28,7 @@ const Post = ({ post }: Props) => {
   const onPageScroll = (e: {
     nativeEvent: { position: number; offset: number };
   }) => {
+    if (e.nativeEvent.offset === 0) return;
     setIsSwiping(true);
     scrollOffset.value = e.nativeEvent.position + e.nativeEvent.offset;
   };
@@ -87,9 +86,10 @@ const Post = ({ post }: Props) => {
           )}
         </View>
         <View className="gap-1 items-start py-2 px-1">
-          <Text className="font-jregular text-2xl">{post.address}</Text>
-          {post.buildingName && (
-            <Text className="font-jregular text-lg">{post.buildingName}</Text>
+          <Text className="font-jregular text-lg">{post.roadNameAddress}</Text>
+          <Text className="font-jregular text-sm text-gray-600">지번: {post.jibunAddress}</Text>
+          {(post.buildingName || post.sigunguBuildingName) && (
+            <Text className="font-jregular text-lg">건물명: {post.buildingName ? post.buildingName : post.sigunguBuildingName}</Text>
           )}
           <View className="flex-row justify-between items-center w-full">
             <View style={styles.iconContainer}>

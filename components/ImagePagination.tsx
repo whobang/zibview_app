@@ -12,8 +12,6 @@ type Props = {
 };
 
 const ImagePagination = ({ imageUrls, scrollOffset }: Props) => {
-  console.log("imageUrls", imageUrls);
-
   return (
     <View style={styles.pagination}>
       {imageUrls.map((_, index) => {
