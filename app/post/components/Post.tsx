@@ -10,11 +10,12 @@ import {
   Image,
 } from "react-native";
 import { router } from "expo-router";
-import NoImage from "../NoImage";
+import NoImage from "../../../components/NoImage";
 import PagerView from "react-native-pager-view";
 import { useSharedValue } from "react-native-reanimated";
-import ImagePagination from "../ImagePagination";
+import ImagePagination from "../../../components/ImagePagination";
 import { Eye, MessageSquareMore, ThumbsUp } from "lucide-react-native";
+import {timeForToday} from "@/utils/dateUtils";
 
 type Props = {
   post: IPostListResponse;
@@ -103,12 +104,12 @@ const Post = ({ post }: Props) => {
               />
               <IconWithCount
                 icon={<Eye color="#FF9C01" size={20} />}
-                count={post.commentCount}
+                count={post.viewCount}
               />
             </View>
             <View className="pr-5">
               <Text className="font-jregular text-sm text-gray-500">
-                3시간 전
+                {timeForToday(post.updatedAt)}
               </Text>
             </View>
           </View>

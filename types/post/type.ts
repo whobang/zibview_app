@@ -12,6 +12,8 @@ export interface IPostListResponse {
   imageUrn: Array<string>;
   likeCount: number;
   commentCount: number;
+  viewCount: number;
+  updatedAt: Date;
 }
 
 interface IDepositRent {

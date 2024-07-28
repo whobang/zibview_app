@@ -6,7 +6,7 @@ import LoginButton from "./auth/LoginButton";
 const HomeHeaderRight = () => {
   return (
     <View style={{ flexDirection: "row" }}>
-      <Link href="/post/address" asChild>
+      <Link href="/app/post/components/post/address" asChild>
         <Pressable>
           {({ pressed }) => (
             <Text

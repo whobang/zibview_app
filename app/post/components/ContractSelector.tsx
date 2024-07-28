@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Pressable, View, StyleSheet, Text } from "react-native";
-import UnderlineTextInput from "../common/UnderlineTextInput";
+import UnderlineTextInput from "../../../components/common/UnderlineTextInput";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { RentType, contractInfoSchema, postSchema } from "@/types/post/type";
 

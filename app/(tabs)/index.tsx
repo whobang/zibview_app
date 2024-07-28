@@ -13,7 +13,7 @@ import { AxiosResponse } from "axios";
 import useAuth from "@/hooks/useAuth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchInput from "@/components/SearchInput";
-import Post from "@/components/post/Post";
+import Post from "@/app/post/components/Post";
 import PlusButton from "@/components/PlusButton";
 import { Page } from "@/types/common/type";
 import NoImage from "@/components/NoImage";

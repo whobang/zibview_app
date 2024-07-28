@@ -2,8 +2,7 @@ import HomeButton from "@/components/HomeButton";
 import useProtectRoute from "@/hooks/useProtectRoute";
 import { Redirect, Stack, router } from "expo-router";
 import React from "react";
-import { TouchableOpacity } from "react-native";
-import Text from "@/components/Text";
+import BackButton from "@/components/BackButton";
 
 const PostLayout = () => {
   const shouldLogin = useProtectRoute();
@@ -26,15 +25,7 @@ const PostLayout = () => {
         name="create"
         options={{
           headerTitle: "",
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => {
-                router.back();
-              }}
-            >
-              <Text>Go back</Text>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => (<BackButton />),
         }}
       />
     </Stack>

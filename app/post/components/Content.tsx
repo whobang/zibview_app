@@ -3,7 +3,7 @@ import Text from "@/components/Text";
 import React, { useState } from "react";
 import { SubPost } from "@/app/post/[postId]";
 import { format } from "date-fns";
-import IconWithCount from "../common/IconWithCount";
+import IconWithCount from "../../../components/common/IconWithCount";
 import uuid from "react-native-uuid";
 import { ThumbsDown, ThumbsUp } from "lucide-react-native";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";

@@ -1,11 +1,17 @@
-import { View, Text } from "react-native";
 import React from "react";
+import Comment from "@/app/post/components/Comment";
 
 const CommentModal = () => {
   return (
-    <View>
-      <Text>CommentModal</Text>
-    </View>
+    <>
+        <Comment />
+        <Comment />
+        <Comment />
+        <Comment />
+        <Comment />
+    </>
+    
+    
   );
 };
 

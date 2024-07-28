@@ -1,11 +1,11 @@
 import { StyleSheet, Text, ScrollView } from "react-native";
-import ImageSelector from "@/components/post/ImageSelector";
+import ImageSelector from "@/app/post/components/ImageSelector";
 import React from "react";
-import Residency from "@/components/post/Residency";
+import Residency from "@/app/post/components/Residency";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { AxiosResponse } from "axios";
-import { Stack, router, useLocalSearchParams } from "expo-router";
-import { IPost, Post, postSchema } from "@/types/post/type";
+import { router, useLocalSearchParams } from "expo-router";
+import { Post, postSchema } from "@/types/post/type";
 import { useForm } from "react-hook-form";
 import FormField from "@/components/FormField";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -62,11 +62,7 @@ const Create = () => {
       nestedScrollEnabled
       showsVerticalScrollIndicator={false}
     >
-      <Text className="text-2xl font-jregular mb-4" numberOfLines={1}>
-        주소 : {address}
-      </Text>
-
-      <Text className="text-2xl font-jregular">거주 기간</Text>
+      {/* <Text className="text-2xl font-jregular">거주 기간</Text>
       <Residency
         name={[
           "contractInfo.contractStartDate",
@@ -75,7 +71,7 @@ const Create = () => {
         control={control}
         contractStartDate={getValues().contractInfo.contractStartDate}
         contractEndDate={getValues().contractInfo.contractEndDate}
-      />
+      /> */}
 
       <Text className="text-2xl font-jregular mt-4">이미지</Text>
       <ImageSelector control={control} name="imageUuids" />
