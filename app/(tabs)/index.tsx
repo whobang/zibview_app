@@ -1,14 +1,13 @@
 import {
-  Text,
   FlatList,
   View,
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { axios } from "@/api/axios";
 import { useAuth0 } from "react-native-auth0";
-import { IPost } from "@/types/post/type";
+import { IPostListResponse } from "@/types/post/type";
 import { AxiosResponse } from "axios";
 import useAuth from "@/hooks/useAuth";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,7 +15,6 @@ import SearchInput from "@/components/SearchInput";
 import Post from "@/app/post/components/Post";
 import PlusButton from "@/components/PlusButton";
 import { Page } from "@/types/common/type";
-import NoImage from "@/components/NoImage";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 
 const HomeScreen = () => {
@@ -24,9 +22,10 @@ const HomeScreen = () => {
 
   // 포스트 목록 요청
   const fetchPosts = async (pageParam: number) => {
-    const response = await axios.get<string, AxiosResponse<Page<IPost>>>(
-      `/api/posts?page=${pageParam}`
-    );
+    const response = await axios.get<
+      string,
+      AxiosResponse<Page<IPostListResponse>>
+    >(`/api/posts?page=${pageParam}`);
     return response.data;
   };
 

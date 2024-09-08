@@ -15,7 +15,7 @@ import PagerView from "react-native-pager-view";
 import { useSharedValue } from "react-native-reanimated";
 import ImagePagination from "../../../components/ImagePagination";
 import { Eye, MessageSquareMore, ThumbsUp } from "lucide-react-native";
-import {timeForToday} from "@/utils/dateUtils";
+import { timeForToday } from "@/utils/dateUtils";
 
 type Props = {
   post: IPostListResponse;
@@ -87,10 +87,15 @@ const Post = ({ post }: Props) => {
           )}
         </View>
         <View className="gap-1 items-start py-2 px-1">
-          <Text className="font-jregular text-lg">{post.roadNameAddress}</Text>
-          <Text className="font-jregular text-sm text-gray-600">지번: {post.jibunAddress}</Text>
+          <Text className="font-bold text-sm">{post.roadNameAddress}</Text>
+          <Text className="text-sm text-gray-600 leading-4">
+            지번: {post.jibunAddress}
+          </Text>
           {(post.buildingName || post.sigunguBuildingName) && (
-            <Text className="font-jregular text-lg">건물명: {post.buildingName ? post.buildingName : post.sigunguBuildingName}</Text>
+            <Text className="font-semibold text-sm leading-4">
+              건물명:{" "}
+              {post.buildingName ? post.buildingName : post.sigunguBuildingName}
+            </Text>
           )}
           <View className="flex-row justify-between items-center w-full">
             <View style={styles.iconContainer}>

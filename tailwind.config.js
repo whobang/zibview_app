@@ -20,7 +20,11 @@ module.exports = {
         pbold: ["Poppins-Bold", "sans-serif"],
         pextrabold: ["Poppins-ExtraBold", "sans-serif"],
         pblack: ["Poppins-Black", "sans-serif"],
-        jregular: ["Jua-Regular", "sans-serif"],
+
+        regular: ["NotoSansKR-Regular", "sans-serif"],
+        medium: ["NotoSansKR-Medium", "sans-serif"],
+        semibold: ["NotoSansKR-SemiBold", "sans-serif"],
+        bold: ["NotoSansKR-Bold", "sans-serif"],
       },
     },
   },

@@ -37,7 +37,10 @@ export default function RootLayout() {
     "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
     "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
     "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
-    "Jua-Regular": require("../assets/fonts/Jua-Regular.ttf"),
+    "NotoSansKR-Regular": require("@/assets/fonts/NotoSansKR/NotoSansKR-Regular.ttf"),
+    "NotoSansKR-Medium": require("@/assets/fonts/NotoSansKR/NotoSansKR-Medium.ttf"),
+    "NotoSansKR-SemiBold": require("@/assets/fonts/NotoSansKR/NotoSansKR-SemiBold.ttf"),
+    "NotoSansKR-Bold": require("@/assets/fonts/NotoSansKR/NotoSansKR-Bold.ttf"),
     ...FontAwesome.font,
   });
 
