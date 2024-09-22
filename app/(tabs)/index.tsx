@@ -3,6 +3,7 @@ import {
   View,
   ActivityIndicator,
   RefreshControl,
+  Text,
 } from "react-native";
 import React, { useState } from "react";
 import { axios } from "@/api/axios";
@@ -11,11 +12,12 @@ import { IPostListResponse } from "@/types/post/type";
 import { AxiosResponse } from "axios";
 import useAuth from "@/hooks/useAuth";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SearchInput from "@/components/SearchInput";
 import Post from "@/app/post/components/Post";
-import PlusButton from "@/components/PlusButton";
 import { Page } from "@/types/common/type";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import Ranking from "../../components/Ranking";
+import SearchInput from "@/components/SearchInput";
+import PlusButton from "@/components/PlusButton";
 
 const HomeScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -77,7 +79,7 @@ const HomeScreen = () => {
 
   // view
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView className="bg-white h-full px-2">
       <FlatList
         data={posts}
         keyExtractor={(post) => post.postId.toString()}
@@ -85,10 +87,11 @@ const HomeScreen = () => {
         onEndReached={onEndReached}
         onEndReachedThreshold={3}
         ListHeaderComponent={() => (
-          <View className="flex-row my-6 px-4 space-y-6 items-center justify-between">
-            <SearchInput />
-            <PlusButton />
-          </View>
+          // <View className="flex-row my-6 px-4 space-y-6 items-center justify-between">
+          //   <SearchInput />
+          //   <PlusButton />
+          // </View>
+          <Ranking />
         )}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

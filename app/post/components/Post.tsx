@@ -50,7 +50,7 @@ const Post = ({ post }: Props) => {
       : post.imageUrn.map((urn) => `${baseUrl}${urn}`);
 
   return (
-    <View className="mx-4 mb-8">
+    <View className="mx-2 mb-8">
       <Pressable onPress={navigate}>
         <View className="w-full h-60 relative justify-center items-center">
           {imageUrls && imageUrls.length > 0 ? (
