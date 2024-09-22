@@ -34,7 +34,7 @@ const Post = ({ post }: Props) => {
     scrollOffset.value = e.nativeEvent.position + e.nativeEvent.offset;
   };
 
-  const pressHandler = () => {
+  const navigate = () => {
     if (isSwiping) return;
     router.push(`/post/${post.postId}`);
   };
@@ -51,9 +51,9 @@ const Post = ({ post }: Props) => {
 
   return (
     <View className="mx-4 mb-8">
-      <Pressable onPress={pressHandler}>
+      <Pressable onPress={navigate}>
         <View className="w-full h-60 relative justify-center items-center">
-          {imageUrls.length > 0 ? (
+          {imageUrls && imageUrls.length > 0 ? (
             <>
               <PagerView
                 className="w-full h-full rounded-xl"
@@ -87,16 +87,15 @@ const Post = ({ post }: Props) => {
           )}
         </View>
         <View className="gap-1 items-start py-2 px-1">
-          <Text className="font-bold text-sm">{post.roadNameAddress}</Text>
-          <Text className="text-sm text-gray-600 leading-4">
-            지번: {post.jibunAddress}
+          <Text className="font-bold text-sm">
+            {post.sggName + " " + post.emdName}
           </Text>
-          {(post.buildingName || post.sigunguBuildingName) && (
-            <Text className="font-semibold text-sm leading-4">
-              건물명:{" "}
-              {post.buildingName ? post.buildingName : post.sigunguBuildingName}
+          {(post.buildingName || post.sggBuildingName) && (
+            <Text className="font-bold text-sm">
+              {post.sggBuildingName || post.buildingName}
             </Text>
           )}
+
           <View className="flex-row justify-between items-center w-full">
             <View style={styles.iconContainer}>
               <IconWithCount
@@ -113,7 +112,7 @@ const Post = ({ post }: Props) => {
               />
             </View>
             <View className="pr-5">
-              <Text className="font-jregular text-sm text-gray-500">
+              <Text className="text-sm text-gray-500">
                 {timeForToday(post.updatedAt)}
               </Text>
             </View>

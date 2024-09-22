@@ -4,36 +4,16 @@ import { z } from "zod";
 // 게시글 목록화면에 사용하는 타입
 export interface IPostListResponse {
   postId: number;
-  roadNameAddress: string;
-  jibunAddress: string;
+  sggName: string;
+  emdName: string;
   buildingName: string;
-  sigunguBuildingName: string;
-  imageUrl: Array<string>;
-  imageUrn: Array<string>;
+  sggBuildingName: string;
   likeCount: number;
   commentCount: number;
   viewCount: number;
+  imageUrl: Array<string>;
+  imageUrn: Array<string>;
   updatedAt: Date;
-}
-
-interface IDepositRent {
-  deposit: number;
-  maintenanceFee: number;
-  lastUpdatedAt: Date;
-}
-
-interface IMonthlyRent {
-  deposit: number;
-  monthlyFee: number;
-  maintenanceFee: number;
-  lastUpdatedAt: Date;
-}
-
-interface IMixedRent {
-  deposit: number;
-  monthlyFee: number;
-  maintenanceFee: number;
-  lastUpdatedAt: Date;
 }
 
 export const rentTypeSchema = z.enum(["DEPOSIT", "MONTHLY", "MIXED"]); // 전세, 월세, 반전세

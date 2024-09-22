@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ActivityIndicator, Platform, View } from "react-native";
 import { WebView } from "react-native-webview";
 import MapView, { Marker } from "react-native-maps";
@@ -15,7 +15,7 @@ const Map = ({ address, latitude, longitude }: Props) => {
   return (
     <View className="w-full h-[350]">
       {Platform.OS === "ios" ? (
-        <IosMap address={address} latitude={latitude} longitude={longitude} />
+        <IOSMap address={address} latitude={latitude} longitude={longitude} />
       ) : (
         <AndroidMap
           address={address}
@@ -29,7 +29,7 @@ const Map = ({ address, latitude, longitude }: Props) => {
 
 export default Map;
 
-const IosMap = ({ address, latitude, longitude }: Props) => {
+const IOSMap = ({ address, latitude, longitude }: Props) => {
   return (
     <MapView
       loadingEnabled

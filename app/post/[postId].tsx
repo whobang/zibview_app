@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import Text from "@/components/Text";
 import { AntDesign } from "@expo/vector-icons";
 import IconWithCount from "@/components/common/IconWithCount";
@@ -16,14 +22,34 @@ import Content from "@/app/post/components/Content";
 import BackButton from "@/components/BackButton";
 import { useAuth0 } from "react-native-auth0";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useQuery } from "@tanstack/react-query";
 
 interface IPost {
   latitude: number;
   longitude: number;
   buildingName: string;
-  address: string;
-  buildingType: BuildingType;
+  sigunguBuildingName: string;
+  roadNameAddress: string;
+  jibunAddress: string;
+  sigungu: string;
+  emd: string;
+  jibuns: IJibun[];
   subPosts: SubPost[];
+}
+
+export interface IJibun {
+  mainPurposeName: string;
+  etcPurposeName: string;
+  indoorMechanicalParkingCount: number | null; // 옥내기계식대수
+  outdoorMechanicalParkingCount: number | null; // 옥외기계식대수
+  indoorSelfParkingCount: number | null; // 옥내자주식대수
+  outdoorSelfParkingCount: number | null; // 옥외자주식대수
+  hoCount: number | null; // 호수
+  houseHoldCount: number; // 세대수
+  groundFloorCount: number | null; // 지상층수
+  undergroundFloorCount: number | null; // 지하층수
+  elevatorCount: number | null; // 엘리베이터 수
+  emergencyElevatorCount: number | null; // 비상용 엘리베이터 수
 }
 
 export interface SubPost {
@@ -50,26 +76,32 @@ const Post = () => {
   const { postId } = useLocalSearchParams<{ postId: string }>();
   const { user } = useAuth0();
   const axiosPrivate = useAxiosPrivate();
-  const [post, setPost] = useState<IPost>({} as IPost);
 
   const allAxios = user ? axiosPrivate : axios;
-
-  if (!postId) {
-    // TODO : 404 페이지로 이동
-    return <Text>포스트를 찾을 수 없습니다.</Text>;
-  }
-
-  useEffect(() => {
-    fetchPost();
-  }, [postId]);
 
   // 포스트 정보 가져오기
   const fetchPost = async () => {
     const data = await allAxios.get<string, AxiosResponse<IPost>>(
       `/api/posts/${postId}`
     );
-    setPost(data.data);
+    return data.data;
   };
+
+  const {
+    data: post,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: [postId],
+    queryFn: () => fetchPost(),
+    initialData: {} as IPost,
+  });
+  console.log(post);
+
+  if (!postId) {
+    // TODO : 404 페이지로 이동
+    return <Text>포스트를 찾을 수 없습니다.</Text>;
+  }
 
   return (
     <>
@@ -83,7 +115,7 @@ const Post = () => {
               className="border border-primary rounded-lg p-2"
               onPress={() =>
                 router.replace(
-                  `/post/create?postId=${postId}&address=${post.address}`
+                  `/post/create?postId=${postId}&address=${post?.roadNameAddress}`
                 )
               }
             >
@@ -94,15 +126,26 @@ const Post = () => {
       />
       <View style={styles.container}>
         <ScrollView nestedScrollEnabled>
-          <Map
-            address={post.address}
-            latitude={post.latitude}
-            longitude={post.longitude}
-          />
+          {isLoading || isFetching ? (
+            <View className="w-full h-[350] flex justify-center bg-orange-200/20">
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <Map
+              address={post.roadNameAddress}
+              latitude={post.latitude}
+              longitude={post.longitude}
+            />
+          )}
+
           <BuildingInfo
             buildingName={post.buildingName}
-            buildingType={post.buildingType}
-            address={post.address}
+            sigunguBuildingName={post.sigunguBuildingName}
+            roadNameAddress={post.roadNameAddress}
+            jibunAddress={post.jibunAddress}
+            sigungu={post.sigungu}
+            emd={post.emd}
+            jibuns={post.jibuns}
           />
           {post.subPosts && post.subPosts.length > 0 ? (
             post.subPosts.map((subPost) => (
@@ -113,8 +156,8 @@ const Post = () => {
               title="등록된 게시글이 없습니다."
               subtitle="첫 번째 게시글을 등록하세요."
               buttonTitle="게시글 작성"
-              containerStyles="mb-6"
-              href={`/post/create?postId=${postId}&address=${post.address}`}
+              containerStyles="mb-6 "
+              href={`/post/create?postId=${postId}&address=${post.roadNameAddress}`}
             />
           )}
         </ScrollView>

@@ -121,7 +121,7 @@ const Content = ({ subPost }: Props) => {
       />
 
       <View className="mb-3">
-        <Text textStyle="text-lg">{subPost.title}</Text>
+        <Text textStyle="text-base font-bold">{subPost.title}</Text>
         <Text textStyle="leading-5">{subPost.description}</Text>
       </View>
       <View className="flex-row justify-between items-center">

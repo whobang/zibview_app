@@ -8,11 +8,7 @@ type Props = {
 };
 
 const Text = ({ children, textStyle }: Props) => {
-  return (
-    <RNText className={`font-jregular ${textStyle}`}>
-      {children}
-    </RNText>
-  );
+  return <RNText className={`${textStyle}`}>{children}</RNText>;
 };
 
 export default Text;
